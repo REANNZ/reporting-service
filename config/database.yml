@@ -23,3 +23,5 @@ production:
   database: <%= ENV['REPORTING_DB_NAME'] %>
   host: <%= ENV['REPORTING_DB_HOST'] %>
   port: <%= ENV['REPORTING_DB_PORT'] %>
+  sslverify: <%= ENV['REPORTING_DB_CA_CRT'] != nil %>
+  sslca: <%= ENV['REPORTING_DB_CA_CRT'] %>
