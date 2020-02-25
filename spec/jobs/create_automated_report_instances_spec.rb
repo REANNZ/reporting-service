@@ -104,7 +104,7 @@ RSpec.describe CreateAutomatedReportInstances do
 
   context 'send email' do
     it 'should send email with subject' do
-      email_subject = 'AAF Reporting Service - New Report Generated'
+      email_subject = 'Tuakiri Reporting Service - New Report Generated'
 
       Timecop.travel(january) do
         subject.perform

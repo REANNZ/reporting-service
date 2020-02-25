@@ -78,14 +78,14 @@ class CreateAutomatedReportInstances
       Mail.deliver(to: subscription.subject.mail,
                    from: Rails.application.config
                               .reporting_service.mail[:from],
-                   subject: 'AAF Reporting Service - New Report Generated',
+                   subject: 'Tuakiri Reporting Service - New Report Generated',
                    body: email_message(identifier, report_class).render,
                    content_type: 'text/html; charset=UTF-8')
     end
   end
 
   def email_message(identifier, report_class)
-    Lipstick::EmailMessage.new(title: 'AAF Reporting Service',
+    Lipstick::EmailMessage.new(title: 'Tuakiri Reporting Service',
                                image_url: image_url('email_banner.png'),
                                content: email_body(identifier, report_class))
   end
