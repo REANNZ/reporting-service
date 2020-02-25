@@ -1,9 +1,8 @@
-GEM
-  remote: https://rubygems.org/
+GIT
+  remote: git@github.com:REANNZ/aaf-lipstick.git
+  revision: 3241b7072f06f7dc5be0c975c9d9ea0af2b30675
   specs:
-    aaf-gumboot (2.2.0)
-      accession
-    aaf-lipstick (3.0.6)
+    aaf-lipstick (4.4.0)
       erubis
       kramdown (~> 1.5)
       rails
@@ -11,6 +10,12 @@ GEM
       sprockets (~> 3.0)
       tilt
       will_paginate
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    aaf-gumboot (2.2.0)
+      accession
     accession (1.0.0)
     actioncable (5.2.4.1)
       actionpack (= 5.2.4.1)
@@ -350,7 +355,7 @@ PLATFORMS
 
 DEPENDENCIES
   aaf-gumboot
-  aaf-lipstick
+  aaf-lipstick!
   accession
   aws-sdk (~> 2)
   brakeman

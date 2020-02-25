@@ -23,7 +23,7 @@ gem 'aws-sdk', '~> 2'
 gem 'json-jwt'
 gem 'torba-rails'
 
-gem 'aaf-lipstick'
+gem 'aaf-lipstick', git: 'git@github.com:REANNZ/aaf-lipstick.git'
 gem 'rmagick', '~> 2.16'
 
 gem 'god', require: false
