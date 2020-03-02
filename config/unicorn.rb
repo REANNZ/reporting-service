@@ -6,8 +6,8 @@ worker_processes 5
 timeout 300
 preload_app true
 pid File.join(ROOT, 'tmp', 'pids', 'unicorn.pid')
-stdout_path '/var/log/aaf/reporting/unicorn/stdout.log'
-stderr_path '/var/log/aaf/reporting/unicorn/stderr.log'
+stdout_path 'log/unicorn-stdout.log'
+stderr_path 'log/unicorn-stderr.log'
 
 before_fork do |server, _worker|
   old_pid = File.join(ROOT, 'tmp', 'pids', 'unicorn.pid.oldbin')
