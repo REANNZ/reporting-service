@@ -3,7 +3,7 @@
 ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
 worker_processes 5
-timeout 300
+timeout 3600
 preload_app true
 pid File.join(ROOT, 'tmp', 'pids', 'unicorn.pid')
 stdout_path 'log/unicorn-stdout.log'
