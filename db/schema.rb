@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_19_023010) do
+ActiveRecord::Schema.define(version: 2020_07_01_224833) do
 
   create_table "activations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "federation_object_type", null: false
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(version: 2020_02_19_023010) do
     t.string "initiating_sp", null: false
     t.string "selected_idp"
     t.index ["phase", "timestamp"], name: "index_discovery_service_events_on_phase_and_timestamp"
-    t.index ["unique_id", "phase"], name: "index_discovery_service_events_on_unique_id_and_phase", unique: true
+    t.index ["unique_id", "timestamp", "phase"], name: "index_ds_events_on_unique_id_and_timestamp_and_phase", unique: true
   end
 
   create_table "federated_login_events", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
