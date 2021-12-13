@@ -5,7 +5,7 @@ module ApplicationHelper
   include Lipstick::Helpers::NavHelper
   include Lipstick::Helpers::FormHelper
 
-  VERSION = '1.4.1-tuakiri5'
+  VERSION = '1.4.4-tuakiri1'
 
   # rubocop:disable Rails/HelperInstanceVariable
   def permitted?(action)
