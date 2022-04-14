@@ -57,7 +57,7 @@ class UpdateFromFederationRegistry
 
   def sync_organization(org_data)
     identifier = org_identifier(org_data[:id])
-    sync_object(Organization, org_data, { identifier: }, name: org_data[:display_name])
+    sync_object(Organization, org_data, { identifier: }, name: org_data[:display_name], domain: org_data[:domain])
   end
 
   def sync_saml_entity(org, klass, obj_data)

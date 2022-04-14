@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_01_15_042123) do
+ActiveRecord::Schema.define(version: 2024_05_06_132318) do
 
   create_table "activations", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+
     t.string "federation_object_type", null: false
     t.integer "federation_object_id", null: false
     t.datetime "activated_at", null: false
@@ -136,6 +137,8 @@ ActiveRecord::Schema.define(version: 2024_01_15_042123) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "domain"
+    t.index ["domain"], name: "index_organizations_on_domain", unique: true
     t.index ["identifier"], name: "index_organizations_on_identifier", unique: true
   end
 
