@@ -13,8 +13,9 @@ class UpdateFromSAMLService
     @service_providers = []
     @identity_providers = []
 
+    doc = document(source, metadata_cert)
     ActiveRecord::Base.transaction do
-      document(source, metadata_cert).xpath('//md:EntityDescriptor', SAML_NAMESPACES).each do |node|
+      doc.xpath('//md:EntityDescriptor', SAML_NAMESPACES).each do |node|
         process_entity(node)
       end
 
