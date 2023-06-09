@@ -20,8 +20,8 @@ RSpec.describe SubscriberRegistrationsReport do
     end
 
     it 'produces title, header and type' do
-      expect(report).to include(title: title,
-                                header: header, type: type)
+      expect(report).to include(title:,
+                                header:, type:)
     end
 
     context 'when all objects are activated' do
@@ -63,6 +63,12 @@ RSpec.describe SubscriberRegistrationsReport do
   end
 
   context 'report generation' do
+    context 'invalid indetifier' do
+      let(:report_type) { 'asdsad' }
+      it 'thows an error' do
+        expect { report }.to raise_error('Identifier is not valid!')
+      end
+    end
     context 'for an Organization' do
       let(:report_type) { 'organizations' }
       let(:title) { 'Registered Organizations' }

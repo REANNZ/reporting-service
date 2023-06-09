@@ -20,25 +20,6 @@ RSpec.describe PushEventsToFederationRegistry do
 
   subject { described_class.new(ds_host) }
 
-  context 'load db config' do
-    let(:yml_file) do
-      <<-YAML
-        a: 1
-        b: 2
-        c: 3
-      YAML
-    end
-
-    it 'should read fr_database.yml' do
-      allow(File)
-        .to receive(:read)
-        .with('config/fr_database.yml')
-        .and_return(yml_file)
-
-      expect(subject.config).to eq(YAML.safe_load(yml_file))
-    end
-  end
-
   context 'establish connection when @config exists' do
     before do
       allow(subject).to receive(:config).and_return(config)
@@ -160,9 +141,9 @@ RSpec.describe PushEventsToFederationRegistry do
 
       let(:event) do
         attributes_for(:discovery_service_event, :response,
-                       selection_method: selection_method,
-                       initiating_sp: initiating_sp,
-                       selected_idp: selected_idp)
+                       selection_method:,
+                       initiating_sp:,
+                       selected_idp:)
       end
 
       let!(:idp_fr_id) { create_fr_idp(selected_idp) }
@@ -180,7 +161,7 @@ RSpec.describe PushEventsToFederationRegistry do
         {
           version: 0,
           date_created: event[:timestamp],
-          ds_host: ds_host,
+          ds_host:,
           idp_entity: selected_idp,
           idpid: idp_fr_id,
           request_type: 'DS Request',
@@ -242,8 +223,8 @@ RSpec.describe PushEventsToFederationRegistry do
       context 'when the idp entity_id is missing' do
         let(:event) do
           attributes_for(:discovery_service_event, :response,
-                         selection_method: selection_method,
-                         initiating_sp: initiating_sp,
+                         selection_method:,
+                         initiating_sp:,
                          selected_idp: nil)
         end
 
@@ -259,9 +240,9 @@ RSpec.describe PushEventsToFederationRegistry do
       context 'when the idp entity_id is missing' do
         let(:event) do
           attributes_for(:discovery_service_event, :response,
-                         selection_method: selection_method,
+                         selection_method:,
                          initiating_sp: nil,
-                         selected_idp: selected_idp)
+                         selected_idp:)
         end
 
         it 'skips the record' do
