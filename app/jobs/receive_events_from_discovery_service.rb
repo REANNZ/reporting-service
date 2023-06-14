@@ -6,7 +6,7 @@ class ReceiveEventsFromDiscoveryService
       result.messages.each do |message|
         process_message(message)
 
-        sqs_client.delete_message(queue_url: queue_url,
+        sqs_client.delete_message(queue_url:,
                                   receipt_handle: message.receipt_handle)
       end
     end
@@ -17,7 +17,7 @@ class ReceiveEventsFromDiscoveryService
   def sqs_results
     Enumerator.new do |y|
       loop do
-        result = sqs_client.receive_message(queue_url: queue_url)
+        result = sqs_client.receive_message(queue_url:)
         break if result.messages.empty?
 
         y << result
@@ -25,12 +25,13 @@ class ReceiveEventsFromDiscoveryService
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def process_message(message)
     jwe = JSON::JWT.decode(message.body, key)
     data = JSON::JWT.decode(jwe.plain_text, key)
     DiscoveryServiceEvent.transaction do
       data['events'].each do |event|
-        push_to_fr_queue(event)
+        push_to_fr_queue(event) if Rails.application.config.reporting_service.federation_registry[:enable_sync]
 
         DiscoveryServiceEvent
           .create_with(event)
@@ -38,6 +39,7 @@ class ReceiveEventsFromDiscoveryService
       end
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def push_to_fr_queue(event)
     return unless event[:phase] == 'response'
@@ -59,10 +61,10 @@ class ReceiveEventsFromDiscoveryService
   end
 
   def key
-    @key ||= OpenSSL::PKey::RSA.new(File.read(sqs_config[:encryption_key]))
+    @key ||= OpenSSL::PKey::RSA.new(Base64.decode64(sqs_config[:encryption_key]))
   end
 
   def redis
-    @redis ||= Redis.new
+    @redis ||= Rails.application.config.redis_client
   end
 end

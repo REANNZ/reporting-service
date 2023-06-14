@@ -12,7 +12,7 @@ class Role < ApplicationRecord
   valhammer
 
   def self.for_entitlement(entitlement)
-    create_with(name: 'auto').find_or_create_by!(entitlement: entitlement)
+    create_with(name: 'auto').find_or_create_by!(entitlement:)
                              .tap(&:update_permissions)
   end
 
@@ -39,7 +39,6 @@ class Role < ApplicationRecord
     parts = entitlement_suffix.split(':', 3)
 
     return update_object_admin_permissions(parts) if parts[2] == 'admin'
-    return if parts.length > 2
 
     values = ["objects:#{parts[0]}:#{parts[1]}:read",
               "objects:#{parts[0]}:#{parts[1]}:report"]
