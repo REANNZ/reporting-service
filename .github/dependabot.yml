@@ -6,3 +6,6 @@ updates:
       interval: "weekly"
       time: "04:00"
       timezone: "Australia/Brisbane"
+    # Disable dependabot for this repository.
+    ignore:
+      - dependency-name: "*"
