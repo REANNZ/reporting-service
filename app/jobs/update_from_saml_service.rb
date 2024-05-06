@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'metadata/schema'
 require 'net/http'
 
 class UpdateFromSAMLService
@@ -25,11 +24,8 @@ class UpdateFromSAMLService
   end
 
   def perform
-    @organizations = {}
     @service_providers = []
-    @service_provider_attributes = []
     @identity_providers = []
-    @identity_provider_attributes = []
 
     ActiveRecord::Base.transaction do
       document.xpath("//md:EntityDescriptor", SAML_NAMESPACES).each do |node|
@@ -88,8 +84,6 @@ class UpdateFromSAMLService
     end
     org.update!(org_attrs)
 
-    @organizations[org.id] = org
-
     org
   end
 
@@ -101,16 +95,21 @@ class UpdateFromSAMLService
 
     idp.update!(name: name, organization: org)
 
-    xpath(node, './saml:Attribute').each do |attr|
+    idp_attributes = idp.identity_provider_saml_attributes
+
+    attrs = xpath(node, './saml:Attribute').map do |attr|
       attr_name = attr.attributes["FriendlyName"].value
       attribute = SAMLAttribute.find_by(name: attr_name)
-      break if attribute.nil?
+      next if attribute.nil?
 
-      assoc = idp.identity_provider_saml_attributes.find_or_initialize_by(saml_attribute_id: attribute.id)
+      assoc = idp_attributes.find_or_initialize_by(saml_attribute_id: attribute.id)
       assoc.save
-
-      @identity_provider_attributes.append(assoc)
+      assoc
     end
+
+    # Delete attributes that aren't associated with this IdP any more
+    attrs.compact!
+    idp_attributes.where.not(id: attrs.map(&:id)).destroy_all
 
     idp
   end
@@ -123,19 +122,24 @@ class UpdateFromSAMLService
 
     sp.update!(name: name, organization: org)
 
-    xpath(node, './md:AttributeConsumingService/md:RequestedAttribute').each do |attr|
+    sp_attributes = sp.service_provider_saml_attributes
+    attrs = xpath(node, './md:AttributeConsumingService/md:RequestedAttribute').map do |attr|
       attr_name = attr.attributes["FriendlyName"].value
       attribute = SAMLAttribute.find_by(name: attr_name)
-      break if attribute.nil?
+      next if attribute.nil?
 
-      assoc = sp.service_provider_saml_attributes.find_or_initialize_by(saml_attribute_id: attribute.id)
+      assoc = sp_attributes.find_or_initialize_by(saml_attribute_id: attribute.id)
 
       is_req_attr = attr.attributes["isRequired"]
       is_req = is_req_attr.nil? ? false : is_req_attr.value == "true"
 
       assoc.update!(optional: !is_req)
-      @service_provider_attributes.push(assoc)
+      assoc
     end
+
+    # Delete attributes that aren't associated with this SP any more
+    attrs.compact!
+    sp_attributes.where.not(id: attrs.map(&:id)).destroy_all
 
     sp
   end
@@ -194,8 +198,9 @@ class UpdateFromSAMLService
     xpath(node, path)[0]
   end
 
-  def org_identifier(fr_id)
-    digest = OpenSSL::Digest.new('SHA256').digest("tuakiri:subscriber:#{fr_id}")
+  def org_identifier(name)
+    # Generate a valid identifier for an organisation given the OrganisationName (domain)
+    digest = OpenSSL::Digest.new('SHA256').digest("tuakiri:subscriber:#{name}")
     Base64.urlsafe_encode64(digest, padding: false)
   end
 
