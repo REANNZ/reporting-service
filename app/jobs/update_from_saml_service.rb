@@ -131,8 +131,8 @@ class UpdateFromSAMLService
   end
 
   def metadata_cert
-    cert = configuration[:metadata_cert]
-    OpenSSL::X509::Certificate.new(cert) if cert
+    cert_path = configuration[:metadata_cert_path]
+    OpenSSL::X509::Certificate.new(File.read(cert_path)) if cert_path
   end
 
   def configuration
