@@ -45,19 +45,19 @@ class UpdateFromSAMLMetadata
 
   # rubocop:disable Metrics/MethodLength
   def process_org(node)
-    org_id_node = xpath_at(node, './md:OrganizationName')
+    org_domain_node = xpath_at(node, './md:OrganizationName')
     org_name_node = xpath_at(node, "./md:OrganizationDisplayName[@xml:lang='en']") ||
                     xpath_at(node, "./md:OrganizationDisplayName[starts-with(@xml:lang, 'en')]")
 
-    return nil unless org_id_node && org_name_node
+    return nil unless org_domain_node && org_name_node
 
-    org_id = org_id_node.content.strip
+    org_domain = org_domain_node.content.strip
     org_name = org_name_node.content.strip
 
-    org = Organization.find_or_initialize_by(domain: org_id)
+    org = Organization.find_or_initialize_by(domain: org_domain)
     org_attrs = { name: org_name }
 
-    org_attrs[:identifier] = org_identifier(org_id) if org.id.nil?
+    org_attrs[:identifier] = org_identifier_from_name(org_domain) if org.id.nil?
 
     org.update!(org_attrs)
 
@@ -144,7 +144,7 @@ class UpdateFromSAMLMetadata
     Rails.application.config.reporting_service.saml_metadata
   end
 
-  def org_identifier(name)
+  def org_identifier_from_name(name)
     # Generate a valid identifier for an organisation given the OrganisationName (domain)
     digest = OpenSSL::Digest.new('SHA256').digest("tuakiri:subscriber:#{name}")
     Base64.urlsafe_encode64(digest, padding: false)
