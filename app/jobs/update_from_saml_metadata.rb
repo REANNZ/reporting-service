@@ -3,7 +3,7 @@
 
 require 'net/http'
 
-class UpdateFromSAMLService
+class UpdateFromSAMLMetadata
   include GetSAMLMetadata
 
   def self.perform
@@ -136,7 +136,7 @@ class UpdateFromSAMLService
   end
 
   def configuration
-    Rails.application.config.reporting_service.saml_service
+    Rails.application.config.reporting_service.saml_metadata
   end
 
   def org_identifier(name)
