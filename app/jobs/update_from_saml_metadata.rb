@@ -128,7 +128,7 @@ class UpdateFromSAMLMetadata
   end
 
   def activate_object(obj, date)
-    obj.activations.find_or_initialize_by({}).update!(activated_at: date)
+    obj.activations.find_or_initialize_by({}).update!(activated_at: date, deactivated_at: nil)
   end
 
   def source
