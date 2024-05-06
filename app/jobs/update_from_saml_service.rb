@@ -151,6 +151,8 @@ class UpdateFromSAMLService
   def document
     doc = Nokogiri::XML.parse(retrieve(source))
 
+    verify_signature(doc)
+
     saml_md_urn = 'urn:oasis:names:tc:SAML:2.0:metadata'
     root = doc.root
 
@@ -182,8 +184,22 @@ class UpdateFromSAMLService
     http.request(request)
   end
 
+  def verify_signature(doc)
+    cert = metadata_cert
+    return if cert.nil?
+
+    return if Xmldsig::SignedDocument.new(doc).validate(cert)
+
+    raise("Invalid signature for metadata from #{source}")
+  end
+
   def source
     configuration[:metadata_url]
+  end
+
+  def metadata_cert
+    cert = configuration[:metadata_cert]
+    OpenSSL::X509::Certificate.new(cert) if cert
   end
 
   def configuration
