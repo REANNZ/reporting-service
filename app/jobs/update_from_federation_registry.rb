@@ -106,7 +106,7 @@ class UpdateFromFederationRegistry
   def clean(touched_objs)
     grouped_objs = touched_objs.group_by(&:class)
     # Don't clean up most objects since some might be from the SAML service
-    #klasses = [
+    # klasses = [
     #  IdentityProviderSAMLAttribute,
     #  ServiceProviderSAMLAttribute,
     #  IdentityProvider,
