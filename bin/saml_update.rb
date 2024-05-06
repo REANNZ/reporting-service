@@ -5,7 +5,7 @@ require_relative '../config/environment'
 
 class SamlUpdateCLI
   def self.perform
-    UpdateFromSamlService.perform
+    UpdateFromSAMLService.perform
   end
 end
 
