@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/ClassLength
 
 require 'net/http'
 
@@ -159,3 +160,4 @@ class UpdateFromSAMLService
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
