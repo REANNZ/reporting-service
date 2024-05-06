@@ -43,9 +43,11 @@ class UpdateFromSAMLMetadata
     process_sp(sp_node, entity_id, org, reg_date) if sp_node
   end
 
+  # rubocop:disable Metrics/MethodLength
   def process_org(node)
     org_id_node = xpath_at(node, './md:OrganizationName')
-    org_name_node = xpath_at(node, './md:OrganizationDisplayName')
+    org_name_node = xpath_at(node, "./md:OrganizationDisplayName[@xml:lang='en']") ||
+                    xpath_at(node, "./md:OrganizationDisplayName[starts-with(@xml:lang, 'en')]")
 
     return nil unless org_id_node && org_name_node
 
@@ -61,11 +63,13 @@ class UpdateFromSAMLMetadata
 
     org
   end
+  # rubocop:enable Metrics/MethodLength
 
   def process_idp(node, entity_id, org, reg_date)
     idp = IdentityProvider.find_or_initialize_by(entity_id: )
 
-    name_node = xpath_at(node, './md:Extensions/mdui:UIInfo/mdui:DisplayName')
+    name_node = xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[@xml:lang='en']") ||
+                xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[starts-with(@xml:lang, 'en')]")
     name = name_node.content.strip if name_node
 
     idp.update!(name: , organization: org)
@@ -80,7 +84,8 @@ class UpdateFromSAMLMetadata
   def process_sp(node, entity_id, org, reg_date)
     sp = ServiceProvider.find_or_initialize_by(entity_id: )
 
-    name_node = xpath_at(node, './md:Extensions/mdui:UIInfo/mdui:DisplayName')
+    name_node = xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[@xml:lang='en']") ||
+                xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[starts-with(@xml:lang, 'en')]")
     name = name_node.content.strip if name_node
 
     sp.update!(name: , organization: org)
