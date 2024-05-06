@@ -105,14 +105,16 @@ class UpdateFromFederationRegistry
 
   def clean(touched_objs)
     grouped_objs = touched_objs.group_by(&:class)
-    klasses = [
-      IdentityProviderSAMLAttribute,
-      ServiceProviderSAMLAttribute,
-      IdentityProvider,
-      ServiceProvider,
-      SAMLAttribute,
-      Organization
-    ]
+    # Don't clean up most objects since some might be from the SAML service
+    #klasses = [
+    #  IdentityProviderSAMLAttribute,
+    #  ServiceProviderSAMLAttribute,
+    #  IdentityProvider,
+    #  ServiceProvider,
+    #  SAMLAttribute,
+    #  Organization
+    #]
+    klasses = [SAMLAttribute]
     klasses.each do |klass|
       objs = grouped_objs.fetch(klass, [])
       klass.where.not(id: objs.map(&:id)).destroy_all
