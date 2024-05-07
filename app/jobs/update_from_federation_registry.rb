@@ -18,6 +18,7 @@ class UpdateFromFederationRegistry
 
   def sync_organizations
     fr_objects(:organizations, 'organizations').flat_map do |org_data|
+      fix_organization_identifier(org_data)
       org = sync_organization(org_data)
       idps = sync_identity_providers(org)
       sps = sync_service_providers(org)
@@ -53,6 +54,17 @@ class UpdateFromFederationRegistry
     attribute.update!(core: (attr_data[:category][:name] == 'Core'), description: attr_data[:description])
 
     attribute
+  end
+
+  def fix_organization_identifier(org_data)
+    # If organisation was created externally and does not have correct identifier
+    # but matches by domain, set the ID
+    org = Organization .find_by(domain: org_data[:domain])
+    # Only proceed if Organization exists and has a temporary identifier
+    return unless org&.identifier&.start_with?('metadata_')
+
+    org.identifier = org_identifier(org_data[:id])
+    org.save
   end
 
   def sync_organization(org_data)
