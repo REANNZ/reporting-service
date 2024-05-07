@@ -43,7 +43,7 @@ class UpdateFromSAMLMetadata
     process_sp(sp_node, entity_id, org, reg_date) if sp_node
   end
 
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def process_org(node)
     org_domain_node = xpath_at(node, './md:OrganizationName')
     org_name_node = xpath_at(node, "./md:OrganizationDisplayName[@xml:lang='en']") ||
@@ -55,15 +55,18 @@ class UpdateFromSAMLMetadata
     org_name = org_name_node.content.strip
 
     org = Organization.find_or_initialize_by(domain: org_domain)
-    org_attrs = { name: org_name }
 
+    # only update the organisation if newly created or still bearing original temporary ID (not updated from FR yet)
+    return org unless org.id.nil? || org.identifier.start_with?('metadata_')
+
+    org_attrs = { name: org_name }
     org_attrs[:identifier] = org_identifier_from_name(org_domain) if org.id.nil?
 
     org.update!(org_attrs)
 
     org
   end
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   def process_idp(node, entity_id, org, reg_date)
     idp = IdentityProvider.find_or_initialize_by(entity_id: )
