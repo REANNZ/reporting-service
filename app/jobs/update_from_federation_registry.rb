@@ -20,11 +20,15 @@ class UpdateFromFederationRegistry
     fr_objects(:organizations, 'organizations').flat_map do |org_data|
       fix_organization_identifier(org_data)
       org = sync_organization(org_data)
-      idps = sync_identity_providers(org)
-      sps = sync_service_providers(org)
+      idps = sync_identity_providers(org) unless saml_metadata_sync_enabled?
+      sps = sync_service_providers(org) unless saml_metadata_sync_enabled?
 
       [org, *idps, *sps].compact
     end
+  end
+
+  def saml_metadata_sync_enabled?
+    Rails.application.config.reporting_service.saml_metadata[:metadata_url]
   end
 
   def sync_identity_providers(org)
