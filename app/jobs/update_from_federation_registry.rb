@@ -18,7 +18,7 @@ class UpdateFromFederationRegistry
 
   def sync_organizations
     fr_objects(:organizations, 'organizations').flat_map do |org_data|
-      fix_organization_identifier(org_data)
+      fix_organization_identifier(org_data) if saml_metadata_sync_enabled?
       org = sync_organization(org_data)
       idps = sync_identity_providers(org) unless saml_metadata_sync_enabled?
       sps = sync_service_providers(org) unless saml_metadata_sync_enabled?
