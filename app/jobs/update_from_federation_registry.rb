@@ -18,12 +18,17 @@ class UpdateFromFederationRegistry
 
   def sync_organizations
     fr_objects(:organizations, 'organizations').flat_map do |org_data|
+      fix_organization_identifier(org_data) if saml_metadata_sync_enabled?
       org = sync_organization(org_data)
-      idps = sync_identity_providers(org)
-      sps = sync_service_providers(org)
+      idps = sync_identity_providers(org) unless saml_metadata_sync_enabled?
+      sps = sync_service_providers(org) unless saml_metadata_sync_enabled?
 
       [org, *idps, *sps].compact
     end
+  end
+
+  def saml_metadata_sync_enabled?
+    Rails.application.config.reporting_service.saml_metadata[:metadata_url]
   end
 
   def sync_identity_providers(org)
@@ -55,9 +60,20 @@ class UpdateFromFederationRegistry
     attribute
   end
 
+  def fix_organization_identifier(org_data)
+    # If organisation was created externally and does not have correct identifier
+    # but matches by domain, set the ID
+    org = Organization .find_by(domain: org_data[:domain])
+    # Only proceed if Organization exists and has a temporary identifier
+    return unless org&.identifier&.start_with?('metadata_')
+
+    org.identifier = org_identifier(org_data[:id])
+    org.save
+  end
+
   def sync_organization(org_data)
     identifier = org_identifier(org_data[:id])
-    sync_object(Organization, org_data, { identifier: }, name: org_data[:display_name])
+    sync_object(Organization, org_data, { identifier: }, name: org_data[:display_name], domain: org_data[:domain])
   end
 
   def sync_saml_entity(org, klass, obj_data)
@@ -105,14 +121,16 @@ class UpdateFromFederationRegistry
 
   def clean(touched_objs)
     grouped_objs = touched_objs.group_by(&:class)
-    klasses = [
-      IdentityProviderSAMLAttribute,
-      ServiceProviderSAMLAttribute,
-      IdentityProvider,
-      ServiceProvider,
-      SAMLAttribute,
-      Organization
-    ]
+    # Don't clean up most objects since some might be from the SAML service
+    # klasses = [
+    #  IdentityProviderSAMLAttribute,
+    #  ServiceProviderSAMLAttribute,
+    #  IdentityProvider,
+    #  ServiceProvider,
+    #  SAMLAttribute,
+    #  Organization
+    #]
+    klasses = [SAMLAttribute]
     klasses.each do |klass|
       objs = grouped_objs.fetch(klass, [])
       klass.where.not(id: objs.map(&:id)).destroy_all
