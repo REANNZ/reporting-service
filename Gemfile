@@ -10,6 +10,9 @@ gem 'mysql2'
 gem 'slim'
 gem 'terser'
 
+gem 'nokogiri'
+gem 'xmldsig'
+
 gem 'accession'
 gem 'activerecord-session_store'
 gem 'implicit-schema'

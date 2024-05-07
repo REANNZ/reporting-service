@@ -11,7 +11,7 @@ module ReportingService
 
   class ConfigurationGenerator
     def build_configuration
-      base_config.merge(admins_config, redis, federation_registry, rapid_connect)
+      base_config.merge(admins_config, redis, federation_registry, rapid_connect, saml_metadata)
     end
 
     private
@@ -89,6 +89,15 @@ module ReportingService
             host: ENV.fetch('FEDERATION_REGISTRY_DB_HOST', ''),
             port: ENV.fetch('FEDERATION_REGISTRY_DB_PORT', '3306')
           }
+        }
+      }
+    end
+
+    def saml_metadata
+      {
+        saml_metadata: {
+          metadata_url: ENV.fetch('SAML_METADATA_URL', nil),
+          metadata_cert_path: ENV.fetch('SAML_METADATA_CERT_PATH', nil)
         }
       }
     end
