@@ -47,7 +47,8 @@ class UpdateFromSAMLMetadata
   def process_org(node)
     org_domain_node = xpath_at(node, './md:OrganizationName')
     org_name_node = xpath_at(node, "./md:OrganizationDisplayName[@xml:lang='en']") ||
-                    xpath_at(node, "./md:OrganizationDisplayName[starts-with(@xml:lang, 'en')]")
+                    xpath_at(node, "./md:OrganizationDisplayName[starts-with(@xml:lang, 'en')]") ||
+                    xpath_at(node, "./md:OrganizationDisplayName")
 
     return nil unless org_domain_node && org_name_node
 
@@ -72,8 +73,9 @@ class UpdateFromSAMLMetadata
     idp = IdentityProvider.find_or_initialize_by(entity_id: )
 
     name_node = xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[@xml:lang='en']") ||
-                xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[starts-with(@xml:lang, 'en')]")
-    name = name_node.content.strip if name_node
+                xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[starts-with(@xml:lang, 'en')]") ||
+                xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName")
+    name = name_node ? name_node.content.strip : entity_id
 
     idp.update!(name: , organization: org)
 
@@ -88,8 +90,9 @@ class UpdateFromSAMLMetadata
     sp = ServiceProvider.find_or_initialize_by(entity_id: )
 
     name_node = xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[@xml:lang='en']") ||
-                xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[starts-with(@xml:lang, 'en')]")
-    name = name_node.content.strip if name_node
+                xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName[starts-with(@xml:lang, 'en')]") ||
+                xpath_at(node, "./md:Extensions/mdui:UIInfo/mdui:DisplayName")
+    name = name_node ? name_node.content.strip : entity_id
 
     sp.update!(name: , organization: org)
 
