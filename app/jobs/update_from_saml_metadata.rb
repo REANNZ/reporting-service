@@ -146,8 +146,11 @@ class UpdateFromSAMLMetadata
 
   def org_identifier_from_name(name)
     # Generate a valid identifier for an organisation given the OrganisationName (domain)
-    digest = OpenSSL::Digest.new('SHA256').digest("tuakiri:subscriber:#{name}")
-    Base64.urlsafe_encode64(digest, padding: false)
+    # This identifier may get replaced with an identifier from Federation Registry
+    # To make it easier to identify these temporary identifiers, do not hash them.
+    # To fit into the permitted format (URLsafe Base64), substitute "." in domain name with "_"
+    sanitised_name = name.tr('.', '_')
+    "metadata_#{sanitised_name}"
   end
 
   def clean
