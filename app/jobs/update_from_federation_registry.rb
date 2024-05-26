@@ -63,7 +63,7 @@ class UpdateFromFederationRegistry
   def fix_organization_identifier(org_data)
     # If organisation was created externally and does not have correct identifier
     # but matches by domain, set the ID
-    org = Organization .find_by(domain: org_data[:domain])
+    org = Organization.find_by(domain: org_data[:domain])
     # Only proceed if Organization exists and has a temporary identifier
     return unless org&.identifier&.start_with?('metadata_')
 
