@@ -53,9 +53,8 @@ RUN yum -y update \
 
 # use ldd to get required libs
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN ldd \
-    /usr/bin/node \
-    | tr -s "[:blank:]" "\n" | grep "^/" | sed "/\/usr\/bin\//d" | \
+RUN objdump -p /usr/bin/node | grep NEEDED | awk '{print $2}' | \
+    xargs -I % sh -c 'ldconfig -p | grep % | tr -s "[:blank:]" "\n" | grep "^/" | sed "/\/usr\/bin\//d"' | \
     xargs -I % sh -c "mkdir -p /\$(dirname deps%); cp % /deps%;"
 
 USER app
@@ -135,7 +134,7 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-427.16.1.el9_4 \
+    kernel-devel-5.14.0-427.18.1.el9_4 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
     mysql-devel-8.0.36-1.el9_3 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
