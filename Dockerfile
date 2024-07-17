@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=""
 # Version is pinned via .ruby-version
 # hadolint ignore=DL3006
-FROM ${BASE_IMAGE} as base
+FROM ${BASE_IMAGE} AS base
 
 WORKDIR $APP_DIR
 
@@ -33,15 +33,16 @@ ENTRYPOINT ["/app/bin/boot.sh"]
 CMD ["bundle exec puma"]
 USER app
 
-FROM base as js-dependencies
+FROM base AS js-dependencies
 USER root
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN yum -y update \
     && update-crypto-policies --set DEFAULT:SHA1 \
-    && yum install https://rpm.nodesource.com/pub_16.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y \
+    && curl -fsSL https://rpm.nodesource.com/setup_21.x | bash -  \
     && yum install -y \
-    # renovate: datasource=yum repo=rocky-9-appstream-x86_64/nodejs:16
-    nodejs-16.20.1 \
+    # renovate: datasource=yum repo=rocky-9-appstream-x86_64/nodejs:21
+    nodejs-21.1.0 \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
     epel-release-9-7.el9 \
     && update-crypto-policies --set DEFAULT \
@@ -62,7 +63,7 @@ USER app
 COPY --chown=app ./package.json ./yarn.lock ./
 RUN yarn install
 
-FROM base as imagick-dependencies
+FROM base AS imagick-dependencies
 USER root
 
 RUN yum -y update \
@@ -110,7 +111,7 @@ RUN ldd \
 
 USER app
 
-FROM base as dependencies
+FROM base AS dependencies
 USER root
 
 RUN yum -y update \
@@ -120,7 +121,7 @@ RUN yum -y update \
     && yum install -y \
     --enablerepo=devel \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    chromium-126.0.6478.55-1.el9 \
+    chromium-126.0.6478.126-1.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     libtool-2.4.6-45.el9 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
@@ -134,7 +135,7 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-427.22.1.el9_4 \
+    kernel-devel-5.14.0-427.24.1.el9_4 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
     mysql-devel-8.0.36-1.el9_3 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
@@ -185,8 +186,8 @@ COPY --chown=app ./app/controllers/application_controller.rb ./app/controllers/a
 
 RUN BUILD=true SECRET_KEY_BASE=TempSecretKey bundle exec rake assets:precompile
 
-FROM dependencies as development
-ENV RAILS_ENV development
+FROM dependencies AS development
+ENV RAILS_ENV=development
 ARG LOCAL_BUILD=false
 
 USER root
@@ -203,10 +204,10 @@ RUN bundle install \
 COPY --chown=app . .
 
 ARG RELEASE_VERSION="VERSION_PROVIDED_ON_BUILD"
-ENV RELEASE_VERSION $RELEASE_VERSION
+ENV RELEASE_VERSION=$RELEASE_VERSION
 
 
-FROM base as production
+FROM base AS production
 USER app
 
 COPY --from=dependencies /opt/.rbenv /opt/.rbenv
@@ -260,4 +261,4 @@ RUN rm -rf spec \
 USER app
 
 ARG RELEASE_VERSION="VERSION_PROVIDED_ON_BUILD"
-ENV RELEASE_VERSION $RELEASE_VERSION
+ENV RELEASE_VERSION=$RELEASE_VERSION
