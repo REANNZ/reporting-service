@@ -67,13 +67,10 @@ RUN yarn install
 FROM base AS imagick-dependencies
 USER root
 
-RUN ARCH="$(rpm --eval '%{_arch}')" && export ARCH && \
-    yum -y update \
+RUN yum -y update \
     && yum -y install \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
     epel-release-9-7.el9 \
-    # TODO: Remove this once 9.4 is out
-    "https://mirror.stream.centos.org/9-stream/AppStream/${ARCH}/os/Packages/LibRaw-0.21.1-1.el9.${ARCH}.rpm" \
     && yum -y install \
     --enablerepo=devel \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
@@ -139,7 +136,7 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-427.26.1.el9_4 \
+    kernel-devel-5.14.0-427.28.1.el9_4 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
     mysql-devel-8.0.36-1.el9_3 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
