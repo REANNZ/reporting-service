@@ -11,10 +11,8 @@ if !Rails.env.test? && ENV.fetch('PROMETHEUS_METRICS_SERVICE_HOST', '') != ''
       host: ENV.fetch('PROMETHEUS_METRICS_SERVICE_HOST', 'reporting-service-metrics.development.svc.cluster.local'),
       port: ENV.fetch('PROMETHEUS_METRICS_SERVICE_PORT', '9493').to_i,
       custom_labels: {
-        hostname: PrometheusExporter.hostname,
-        environment: ENV.fetch('ENVIRONMENT_NAME', 'development'),
-        app: 'reporting-service',
-        pod: ENV.fetch('HOSTNAME', 'unknown')
+        environment: ENV.fetch('ENVIRONMENT_ID', 'development'),
+        app: 'reporting-service'
       }
     )
 
