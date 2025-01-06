@@ -15,6 +15,8 @@ Bundler.require(*Rails.groups)
 
 module ReportingService
   class Application < Rails::Application
+    config.load_defaults = 6.1
+
     config.autoload_paths += [
       File.join(config.root, 'lib'),
       File.join(config.root, 'app', 'reports'),
