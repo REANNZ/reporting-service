@@ -56,6 +56,8 @@ module ReportingService
       config.redis_client = Redis.new
     end
 
+    config.action_dispatch.cookies_same_site_protection = :strict
+
     if ENV['RAILS_LOG_TO_STDOUT'].present?
       logger = ActiveSupport::Logger.new(ENV.fetch('STDOUT', $stdout))
       logger.formatter = config.log_formatter
