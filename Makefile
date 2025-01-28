@@ -1,5 +1,5 @@
 -include .env # Applies to every target in the file!
--include ../aaf-terraform/app.Makefile
+-include ../aaf-terraform/Makefile
 
 BUILD_TARGET=development
 VERSION := $(shell cat .ruby-version)

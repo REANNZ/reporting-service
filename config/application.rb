@@ -15,6 +15,8 @@ Bundler.require(*Rails.groups)
 
 module ReportingService
   class Application < Rails::Application
+    config.load_defaults = 6.1
+
     config.autoload_paths += [
       File.join(config.root, 'lib'),
       File.join(config.root, 'app', 'reports'),
@@ -53,6 +55,8 @@ module ReportingService
       config.cache_store = :redis_cache_store
       config.redis_client = Redis.new
     end
+
+    config.action_dispatch.cookies_same_site_protection = :strict
 
     if ENV['RAILS_LOG_TO_STDOUT'].present?
       logger = ActiveSupport::Logger.new(ENV.fetch('STDOUT', $stdout))

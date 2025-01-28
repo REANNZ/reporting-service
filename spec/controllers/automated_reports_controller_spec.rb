@@ -49,7 +49,7 @@ RSpec.describe AutomatedReportsController, type: :controller do
       end
 
       it 'should destroy automated report subscription' do
-        expect(assigns[:subscriptions]).not_to include(subscription)
+        expect(assigns[:subscriptions]).to be_nil
       end
     end
   end
