@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=""
+ARG BASE_IMAGE="please/change:me"
 # Version is pinned via .ruby-version
 # hadolint ignore=DL3006
 FROM ${BASE_IMAGE} AS base
@@ -22,7 +22,7 @@ USER root
 
 RUN yum -y update \
     && yum install -y \
-    # renovate: datasource=yum repo=rocky-9-appstream-x86_64
+    # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     jq-1.6-17.el9 \
     && yum -y clean all \
     && rm -rf /var/cache/yum
@@ -122,7 +122,7 @@ RUN yum -y update \
     && yum install -y \
     --enablerepo=devel \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    chromium-131.0.6778.264-1.el9 \
+    chromium-132.0.6834.110-1.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     libtool-2.4.6-46.el9 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
@@ -138,7 +138,7 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-503.21.1.el9_5 \
+    kernel-devel-5.14.0-503.22.1.el9_5 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
     mysql-devel-8.0.36-1.el9_3 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
