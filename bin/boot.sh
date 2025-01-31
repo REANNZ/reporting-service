@@ -7,12 +7,16 @@ set -u
 echo "Creating /tmp/started"
 touch /tmp/started
 
+if [ "${RAILS_ENV}" != "production" ]; then
+  bundle
+fi
+
 if [ "${PREPARE_DB-}" != "" ]; then
   . bin/database.sh
 fi
 
-if [ "${TMPDIR-}" != "" ] && [ ! -d $TMPDIR ]; then
-  mkdir $TMPDIR
+if [ "${TMPDIR-}" != "" ] && [ ! -d "$TMPDIR" ]; then
+  mkdir "$TMPDIR"
 fi
 
 if [ "${DEBUG_CONTAINER-}" == "true" ]; then

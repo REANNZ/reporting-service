@@ -37,15 +37,11 @@ FROM base AS js-dependencies
 USER root
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN yum -y update \
-    && update-crypto-policies --set DEFAULT:SHA1 \
-    && curl -fsSL https://rpm.nodesource.com/setup_21.x | bash -  \
+RUN  yum -y update \
     && yum install -y \
-    # renovate: datasource=yum repo=rocky-9-appstream-x86_64/nodejs:21
-    nodejs-21.1.0 \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
     epel-release-9-7.el9 \
-    && update-crypto-policies --set DEFAULT \
+    && dnf module install -y nodejs:22 \
     && yum install -y \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
     yarnpkg-1.22.22-5.el9  \
@@ -261,6 +257,8 @@ RUN rm -rf spec \
     && find /opt/.rbenv/ -type d -regextype egrep -regex ".*(\.git|spec|dummy_rails|test\/rails_app)" -exec rm -rf {} + \
     # Fix for https://github.com/goodwithtech/dockle/blob/master/CHECKPOINT.md#cis-di-0008
     && find / -path /proc -prune -o -perm /u=s,g=s -type f -print -exec rm {} \;
+
+RUN bundle config frozen true
 USER app
 
 ARG RELEASE_VERSION="VERSION_PROVIDED_ON_BUILD"
