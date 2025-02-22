@@ -134,9 +134,9 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-503.23.2.el9_5 \
+    kernel-devel-5.14.0-503.26.1.el9_5 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
-    mysql-devel-8.0.36-1.el9_3 \
+    mysql-devel-8.0.41-2.el9_5 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     procps-ng-3.3.17-14.el9 \
     && yum -y clean all \
