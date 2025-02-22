@@ -9,8 +9,8 @@
     "eslint-plugin-import": "2.31.0",
     "eslint-config-prettier": "10.0.1",
     "eslint-plugin-prettier": "5.2.3",
-    "eslint-plugin-yml": "1.16.0",
-    "prettier": "3.5.0"
+    "eslint-plugin-yml": "1.17.0",
+    "prettier": "3.5.2"
   },
   "scripts": {
     "lint": "eslint . --quiet"
