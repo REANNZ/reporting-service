@@ -37,15 +37,11 @@ FROM base AS js-dependencies
 USER root
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN yum -y update \
-    && update-crypto-policies --set DEFAULT:SHA1 \
-    && curl -fsSL https://rpm.nodesource.com/setup_21.x | bash -  \
+RUN  yum -y update \
     && yum install -y \
-    # renovate: datasource=yum repo=rocky-9-appstream-x86_64/nodejs:21
-    nodejs-21.1.0 \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
     epel-release-9-7.el9 \
-    && update-crypto-policies --set DEFAULT \
+    && dnf module install -y nodejs:22 \
     && yum install -y \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
     yarnpkg-1.22.22-5.el9  \
@@ -122,7 +118,7 @@ RUN yum -y update \
     && yum install -y \
     --enablerepo=devel \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    chromium-132.0.6834.110-1.el9 \
+    chromium-133.0.6943.98-1.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     libtool-2.4.6-46.el9 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
@@ -132,15 +128,15 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     automake-1.16.2-8.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    gcc-11.5.0-2.el9 \
+    gcc-11.5.0-5.el9_5 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    gcc-c++-11.5.0-2.el9 \
+    gcc-c++-11.5.0-5.el9_5 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-503.22.1.el9_5 \
+    kernel-devel-5.14.0-503.26.1.el9_5 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
-    mysql-devel-8.0.36-1.el9_3 \
+    mysql-devel-8.0.41-2.el9_5 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     procps-ng-3.3.17-14.el9 \
     && yum -y clean all \
@@ -261,6 +257,8 @@ RUN rm -rf spec \
     && find /opt/.rbenv/ -type d -regextype egrep -regex ".*(\.git|spec|dummy_rails|test\/rails_app)" -exec rm -rf {} + \
     # Fix for https://github.com/goodwithtech/dockle/blob/master/CHECKPOINT.md#cis-di-0008
     && find / -path /proc -prune -o -perm /u=s,g=s -type f -print -exec rm {} \;
+
+RUN bundle config frozen true
 USER app
 
 ARG RELEASE_VERSION="VERSION_PROVIDED_ON_BUILD"

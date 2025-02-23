@@ -30,9 +30,9 @@ jobs:
       commands: |
         [
           'export REPORTING_IMAGE="{0}" && docker compose -f compose.yml run -e RAILS_ENV=test reporting bundle exec rspec',
-          'docker run {0} bundle exec rubocop -P',
-          'docker run {0} bundle exec brakeman',
-          'docker run {0} bundle exec rake lint_rb',
-          'docker run {0} bundle exec rake lint_js',
-          'docker run {0} bundle exec rake lint_md'
+          'docker run {0} bundle exec rake lint_warn'
+         ]
+      production_commands: |
+        [
+          'docker run --read-only -v /tmp:/tmp {0} bundle check',
         ]

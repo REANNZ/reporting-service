@@ -11,16 +11,16 @@ COMMON_ARGS=\
 -v ${PWD}/app:/app/app \
 -v ${PWD}/config:/app/config \
 -v ${PWD}/lib:/app/lib \
+-v ${PWD}/tmp:/app/tmp \
+-v ${PWD}/tmp:/tmp \
+-v ${PWD}/lib:/app/lib \
 -v ${PWD}/log:/app/log \
 -v ${PWD}/db:/app/db \
 -v ${PWD}/Gemfile.lock:/app/Gemfile.lock \
 -e REPORTING_DB_HOST=${LOCAL_IP} \
--e REDIS_HOST=${LOCAL_IP} \
+-e REDIS_HOST=${LOCAL_IP}
 
-
-RUN_ARGS=\
---read-only \
--p ${PORT}:${PORT}
+RUN_ARGS=
 
 run-image:
 	make run-generic-image-command ADDITIONAL_ARGS="${RUN_ARGS}"

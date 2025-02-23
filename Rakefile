@@ -1,17 +1,24 @@
 # frozen_string_literal: true
 
-begin
-  require 'rubocop/rake_task'
-  require 'brakeman'
-rescue LoadError
-  :production
-end
-
-require File.expand_path('config/application', __dir__)
+require_relative 'config/application'
 
 Rails.application.load_tasks
 
-RuboCop::RakeTask.new if defined?(RuboCop)
+unless Rails.env.production?
+  require 'brakeman'
+
+  require 'syntax_tree/rake_tasks'
+  [SyntaxTree::Rake::CheckTask, SyntaxTree::Rake::WriteTask].each do |klass|
+    klass.new do |t|
+      t.source_files = FileList[%w[Gemfile Rakefile app/**/*.rb bin/**/*.rb config/**/*.rb spec/**/*.rb]]
+      t.plugins = %w[plugin/single_quotes]
+      t.print_width = 120
+    end
+  end
+
+  require 'rubocop/rake_task'
+  RuboCop::RakeTask.new
+end
 
 task brakeman: :environment do
   result = Brakeman.run app_path: '.', print_report: true, pager: false
@@ -58,15 +65,11 @@ task lint_md_fix: :environment do
   sh "./node_modules/.bin/prettier --write '**/*.md'", verbose: false
 end
 
-task rubocop: :environment do
-  puts 'Running Rubocop... '
-  sh 'rubocop --no-parallel', verbose: false
+task force_kill: :environment do
+  puts 'force killing'
+  Kernel.exit!(0)
 end
 
-task rubocop_fix: :environment do
-  puts 'Running Rubocop... '
-  sh 'rubocop -A', verbose: false
-end
-
-task default: %i[brakeman lint_rb rubocop lint_md lint_js rspec]
-task lint: %i[lint_rb_fix lint_md_fix rubocop_fix lint_js_fix]
+task default: %i[lint_warn rspec]
+task lint: %i[stree:write lint_md_fix rubocop:autocorrect_all lint_js_fix force_kill]
+task lint_warn: %i[brakeman stree:check rubocop lint_md lint_js]
