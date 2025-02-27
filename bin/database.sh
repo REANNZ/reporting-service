@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ "${DEBUG_CONTAINER-}" == "true" ]; then
   echo 'Debugging!'
   tail -f /dev/null
