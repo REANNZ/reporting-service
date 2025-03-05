@@ -29,6 +29,7 @@ gem 'terser'
 gem 'torba-rails'
 gem 'valhammer'
 gem 'xmldsig'
+gem 'uri', '0.13.2'
 
 group :development, :test do
   gem 'aaf-gumboot'

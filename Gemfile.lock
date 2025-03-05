@@ -456,7 +456,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
-    uri (0.13.0)
+    uri (0.13.2)
     valhammer (1.1.0)
       activerecord (> 4.1)
       activesupport (> 4.1)
@@ -543,6 +543,7 @@ DEPENDENCIES
   terser
   timecop
   torba-rails
+  uri (= 0.13.2)
   valhammer
   webmock
   xmldsig
