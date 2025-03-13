@@ -26,6 +26,7 @@ gem 'sentry-ruby'
 gem 'slim'
 gem 'terser'
 gem 'torba-rails'
+gem 'uri', '>= 0.13.2', '< 0.14'
 gem 'valhammer'
 
 group :development, :test do

@@ -451,7 +451,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
-    uri (0.13.0)
+    uri (0.13.2)
     valhammer (1.1.0)
       activerecord (> 4.1)
       activesupport (> 4.1)
@@ -534,6 +534,7 @@ DEPENDENCIES
   terser
   timecop
   torba-rails
+  uri (>= 0.13.2, < 0.14)
   valhammer
   webmock
 
@@ -715,7 +716,7 @@ CHECKSUMS
   torba-rails (1.0.3) sha256=f1cc34a24e43a908b3b52a1b0ccee90b4dad52046641e7c011bde52916fdf42c
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (2.6.0) sha256=12279874bba6d5e4d2728cef814b19197dbb10d7a7837a869bab65da943b7f5a
-  uri (0.13.0) sha256=26553c2a9399762e1e8bebd4444b4361c4b21298cf1c864b22eeabc9c4998f24
+  uri (0.13.2) sha256=a557196e652011bcff0b36d29f9e427fefcf60cc35c0ab8cce08768a6287e457
   valhammer (1.1.0) sha256=2423b003b311e5b58fa5aa9ee06a5a48c4bfbce9c6e8d4dbffdb1400d76277ed
   webmock (3.25.1) sha256=ab9d5d9353bcbe6322c83e1c60a7103988efc7b67cd72ffb9012629c3d396323
   webrick (1.9.1) sha256=b42d3c94f166f3fb73d87e9b359def9b5836c426fc8beacf38f2184a21b2a989
