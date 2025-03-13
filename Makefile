@@ -8,6 +8,7 @@ APP_NAME=reporting-service
 
 COMMON_ARGS=\
 --env-file=.env \
+-p 8080:8080 \
 -v ${PWD}/app:/app/app \
 -v ${PWD}/config:/app/config \
 -v ${PWD}/lib:/app/lib \

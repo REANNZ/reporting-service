@@ -111,14 +111,21 @@ USER app
 FROM base AS dependencies
 USER root
 
+# Install chromium in a separate RUN call so we can ignore the lint violation just once.
+# We don't pin chrome because it's only used in the test suite. It is not present in the production image.
+# hadolint ignore=DL3033
 RUN yum -y update \
     && yum -y install \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
     epel-release-9-7.el9 \
     && yum install -y \
     --enablerepo=devel \
-    # renovate: datasource=yum repo=epel-9-everything-x86_64
-    chromium-133.0.6943.98-1.el9 \
+    chromium \
+    && yum -y clean all
+
+RUN yum -y update \
+    && yum install -y \
+    --enablerepo=devel \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     libtool-2.4.6-46.el9 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
@@ -134,7 +141,7 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-503.26.1.el9_5 \
+    kernel-devel-5.14.0-503.29.1.el9_5 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
     mysql-devel-8.0.41-2.el9_5 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
