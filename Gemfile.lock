@@ -163,6 +163,16 @@ GEM
       webrick (~> 1.7)
       websocket-driver (>= 0.6, < 0.8)
     ffi (1.17.0)
+    ffi (1.17.0-aarch64-linux-gnu)
+    ffi (1.17.0-aarch64-linux-musl)
+    ffi (1.17.0-arm-linux-gnu)
+    ffi (1.17.0-arm-linux-musl)
+    ffi (1.17.0-arm64-darwin)
+    ffi (1.17.0-x86-linux-gnu)
+    ffi (1.17.0-x86-linux-musl)
+    ffi (1.17.0-x86_64-darwin)
+    ffi (1.17.0-x86_64-linux-gnu)
+    ffi (1.17.0-x86_64-linux-musl)
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashdiff (1.1.2)
@@ -455,6 +465,9 @@ GEM
     valhammer (1.1.0)
       activerecord (> 4.1)
       activesupport (> 4.1)
+    w_syntax_tree-erb (0.12.0)
+      prettier_print (~> 1.2, >= 1.2.0)
+      syntax_tree (~> 6.1, >= 6.1.1)
     webmock (3.25.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -538,6 +551,7 @@ DEPENDENCIES
   torba-rails
   uri (>= 0.13.2, < 0.14)
   valhammer
+  w_syntax_tree-erb
   webmock
 
 CHECKSUMS
@@ -598,6 +612,16 @@ CHECKSUMS
   faraday-net_http (3.1.0) sha256=1627be414960d0131691190ff524506ba6607402a50fb6eccda9e64ca60f859f
   ferrum (0.14) sha256=e9a3f942d29bf87d9925e5f10adc33adcd05963699abfa919c003d1e9b12c725
   ffi (1.17.0) sha256=51630e43425078311c056ca75f961bb3bda1641ab36e44ad4c455e0b0e4a231c
+  ffi (1.17.0-aarch64-linux-gnu) sha256=228c8fb79e6b018a31c75414115a75ca65f74e8138b2c9c97d22041e4e12f2c1
+  ffi (1.17.0-aarch64-linux-musl) sha256=f31ab84b3d7a850a22d2767b66dafebaebe12f64eaa9a4d1748d417ad1123109
+  ffi (1.17.0-arm-linux-gnu) sha256=ae3b5bf4701c84263002f13eadfde35fe1e6f88720e7c6f15f1f08f46d745857
+  ffi (1.17.0-arm-linux-musl) sha256=6f9dc84817e2dfb62fd209649097e134625c9a66db43c441fa7a8ddb17f40fc9
+  ffi (1.17.0-arm64-darwin) sha256=609c874e76614542c6d485b0576e42a7a38ffcdf086612f9a300c4ec3fcd0d12
+  ffi (1.17.0-x86-linux-gnu) sha256=81b80d24392be2b8ec6bd66da6b488fd05242af5c0868b59c8b716e5a633c8b5
+  ffi (1.17.0-x86-linux-musl) sha256=6917c10e928b80dbf9b16abf9696aa9d7ca417a24d0cc5c1d53fb4ce9799c8c1
+  ffi (1.17.0-x86_64-darwin) sha256=fdcd48c69db3303ef95aec5c64d6275fcf9878a02c0bec0afddc506ceca0f56b
+  ffi (1.17.0-x86_64-linux-gnu) sha256=1015e59d5919dd6bbcb0704325b0bd639be664a79b1e2189943ceb18faa34198
+  ffi (1.17.0-x86_64-linux-musl) sha256=6573299eedf8dd16668f8a435b72c4236b61bca0279bb73c811e3cbdb395e877
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
   hashdiff (1.1.2) sha256=2c30eeded6ed3dce8401d2b5b99e6963fe5f14ed85e60dd9e33c545a44b71a77
   i18n (1.14.6) sha256=dc229a74f5d181f09942dd60ab5d6e667f7392c4ee826f35096db36d1fe3614c
@@ -720,6 +744,7 @@ CHECKSUMS
   unicode-display_width (2.6.0) sha256=12279874bba6d5e4d2728cef814b19197dbb10d7a7837a869bab65da943b7f5a
   uri (0.13.2) sha256=a557196e652011bcff0b36d29f9e427fefcf60cc35c0ab8cce08768a6287e457
   valhammer (1.1.0) sha256=2423b003b311e5b58fa5aa9ee06a5a48c4bfbce9c6e8d4dbffdb1400d76277ed
+  w_syntax_tree-erb (0.12.0) sha256=814214dff9267ab73e2d346ddcfb7210e7f8aa3e45c845ee2f5800e6cce03791
   webmock (3.25.1) sha256=ab9d5d9353bcbe6322c83e1c60a7103988efc7b67cd72ffb9012629c3d396323
   webrick (1.9.1) sha256=b42d3c94f166f3fb73d87e9b359def9b5836c426fc8beacf38f2184a21b2a989
   websocket-driver (0.7.7) sha256=056d99f2cd545712cfb1291650fde7478e4f2661dc1db6a0fa3b966231a146b4

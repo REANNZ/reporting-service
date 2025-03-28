@@ -59,6 +59,7 @@ group :development, :test do
   gem 'syntax_tree', require: false
   gem 'timecop'
   gem 'webmock', require: false
+  gem 'w_syntax_tree-erb', require: false
 end
 
 group :development do
