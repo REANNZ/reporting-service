@@ -19,5 +19,4 @@ jobs:
         with:
           SHA: ${{ github.sha }}
           ROLE: ${{ secrets.ROLE }}
-          ECR_REPOSITORY:  reporting-service
           APP: reporting-service
