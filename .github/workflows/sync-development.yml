@@ -19,9 +19,5 @@ jobs:
         with:
           SHA: ${{ github.sha }}
           ROLE: ${{ secrets.ROLE }}
-    uses: ausaccessfed/workflows/.github/workflows/sync-development.yml@main
-    with:
-      ecr_repository: reporting-service
-      app: reporting-service
-      sha: ${{ github.sha }}
-    secrets: inherit
+          ECR_REPOSITORY:  reporting-service
+          APP: reporting-service
