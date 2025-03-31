@@ -13,6 +13,12 @@ jobs:
       id-token: write
       contents: read
       packages: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ausaccessfed/workflows/.github/actions/sync-development@main
+        with:
+          SHA: ${{ github.sha }}
+          ROLE: ${{ secrets.ROLE }}
     uses: ausaccessfed/workflows/.github/workflows/sync-development.yml@main
     with:
       ecr_repository: reporting-service
