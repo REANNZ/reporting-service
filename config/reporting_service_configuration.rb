@@ -54,6 +54,7 @@ module ReportingService
       authenticator = 'RapidRack::Authenticator'
 
       ## TODO this doesnt exist use rapid.test russels rapid_connect_service
+      #Issue URL: https://github.com/ausaccessfed/reporting-service/issues/727
       # authenticator = 'RapidRack::MockAuthenticator' if Rails.env.development?
       authenticator = 'RapidRack::TestAuthenticator' if Rails.env.test?
 

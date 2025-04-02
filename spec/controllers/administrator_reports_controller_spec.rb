@@ -9,6 +9,7 @@ RSpec.describe AdministratorReportsController, type: :controller do
 
   let(:source) do
     # TODO: test with other sources?
+    # Issue URL: https://github.com/ausaccessfed/reporting-service/issues/728
     { source: 'DS' }
   end
 

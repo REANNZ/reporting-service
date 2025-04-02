@@ -7,6 +7,7 @@ require:
   - rubocop-performance
   - rubocop-rails
   # TODO: turning this on breaks alot of tests. must be the given -> let change
+  # Issue URL: https://github.com/ausaccessfed/reporting-service/issues/726
   # - rubocop-rspec
 
 AllCops:
