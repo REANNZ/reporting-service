@@ -10,22 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
-
+ActiveRecord::Schema[7.0].define(version: 2024_01_15_042123) do
   create_table "activations", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "federation_object_type", null: false
     t.integer "federation_object_id", null: false
-    t.datetime "activated_at", null: false
-    t.datetime "deactivated_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "activated_at", precision: nil, null: false
+    t.datetime "deactivated_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "api_subject_roles", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.integer "api_subject_id", null: false
     t.integer "role_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["api_subject_id", "role_id"], name: "index_api_subject_roles_on_api_subject_id_and_role_id", unique: true
     t.index ["role_id"], name: "fk_rails_3c99dcce56"
   end
@@ -36,16 +35,16 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
     t.string "contact_mail", null: false
     t.string "description", null: false
     t.boolean "enabled", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["x509_cn"], name: "index_api_subjects_on_x509_cn", unique: true
   end
 
   create_table "automated_report_instances", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.integer "automated_report_id", null: false
-    t.datetime "range_end", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "range_end", precision: nil, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "identifier", null: false
     t.index ["automated_report_id"], name: "fk_rails_40d5ad7e3d"
     t.index ["identifier"], name: "index_automated_report_instances_on_identifier", unique: true
@@ -56,8 +55,8 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
     t.integer "automated_report_id", null: false
     t.integer "subject_id", null: false
     t.string "identifier", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["automated_report_id"], name: "fk_rails_f6b97923bf"
     t.index ["identifier"], name: "index_automated_report_subscriptions_on_identifier", unique: true
     t.index ["subject_id"], name: "fk_rails_59e1f019b3"
@@ -67,9 +66,9 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
     t.string "report_class", null: false
     t.string "interval", null: false
     t.string "target"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "instances_timestamp"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "instances_timestamp", precision: nil
     t.string "source"
   end
 
@@ -79,11 +78,11 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
     t.string "group", null: false
     t.string "phase", null: false
     t.string "unique_id", null: false
-    t.datetime "timestamp", null: false
+    t.datetime "timestamp", precision: nil, null: false
     t.string "selection_method"
     t.string "return_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "initiating_sp", null: false
     t.string "selected_idp"
     t.index ["phase", "timestamp"], name: "index_discovery_service_events_on_phase_and_timestamp"
@@ -95,9 +94,9 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
     t.string "asserting_party", null: false
     t.string "result", null: false
     t.string "hashed_principal_name", null: false
-    t.datetime "timestamp", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "timestamp", precision: nil, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["hashed_principal_name"], name: "index_federated_login_events_on_hashed_principal_name"
     t.index ["result", "timestamp"], name: "index_federated_login_events_on_result_and_timestamp"
   end
@@ -105,8 +104,8 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
   create_table "identity_provider_saml_attributes", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.integer "identity_provider_id", null: false
     t.integer "saml_attribute_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["identity_provider_id", "saml_attribute_id"], name: "unique_identity_provider_attribute", unique: true
     t.index ["saml_attribute_id"], name: "fk_rails_3afed16ec1"
   end
@@ -114,8 +113,8 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
   create_table "identity_providers", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "entity_id", null: false
     t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "organization_id", null: false
     t.index ["entity_id"], name: "index_identity_providers_on_entity_id", unique: true
     t.index ["organization_id"], name: "fk_rails_7a44c5f546"
@@ -125,25 +124,25 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
     t.string "data", limit: 4096, null: false
     t.string "ip", null: false
     t.boolean "discarded", default: false, null: false
-    t.datetime "timestamp", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "timestamp", precision: nil, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["discarded"], name: "index_incoming_f_ticks_events_on_discarded"
   end
 
   create_table "organizations", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "identifier", null: false
     t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["identifier"], name: "index_organizations_on_identifier", unique: true
   end
 
   create_table "permissions", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.integer "role_id", null: false
     t.string "value", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["role_id", "value"], name: "index_permissions_on_role_id_and_value", unique: true
   end
 
@@ -151,8 +150,8 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
     t.string "identifier", null: false
     t.string "name", null: false
     t.string "service_type", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "organization_id"
     t.index ["identifier"], name: "index_rapid_connect_services_on_identifier", unique: true
     t.index ["organization_id"], name: "fk_rails_b509da8b0a"
@@ -161,16 +160,16 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
   create_table "roles", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "name", null: false
     t.string "entitlement", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["entitlement"], name: "index_roles_on_entitlement", unique: true
   end
 
   create_table "saml_attributes", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "name", null: false
     t.string "description", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "core", null: false
     t.index ["name"], name: "index_saml_attributes_on_name", unique: true
   end
@@ -179,8 +178,8 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
     t.integer "service_provider_id", null: false
     t.integer "saml_attribute_id", null: false
     t.boolean "optional", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["saml_attribute_id"], name: "fk_rails_5dcfbc93eb"
     t.index ["service_provider_id", "saml_attribute_id"], name: "unique_service_provider_attribute", unique: true
   end
@@ -188,8 +187,8 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
   create_table "service_providers", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "entity_id", null: false
     t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "organization_id", null: false
     t.index ["entity_id"], name: "index_service_providers_on_entity_id", unique: true
     t.index ["organization_id"], name: "fk_rails_36567d88d4"
@@ -198,8 +197,8 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
@@ -207,8 +206,8 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
   create_table "subject_roles", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.integer "subject_id", null: false
     t.integer "role_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["role_id"], name: "fk_rails_775c958b0f"
     t.index ["subject_id", "role_id"], name: "index_subject_roles_on_subject_id_and_role_id", unique: true
   end
@@ -220,8 +219,8 @@ ActiveRecord::Schema[6.1].define(version: 2024_01_15_042123) do
     t.string "mail", null: false
     t.boolean "enabled", default: true, null: false
     t.boolean "complete", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["shared_token"], name: "index_subjects_on_shared_token", unique: true
     t.index ["targeted_id"], name: "index_subjects_on_targeted_id", unique: true
   end
