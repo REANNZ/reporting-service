@@ -21,7 +21,16 @@ module Authentication
 
     def subject(_env, attrs)
       subject = subject_scope(attrs).find_or_initialize_by({})
-      subject.update!(attrs.merge(complete: true))
+      subject.attributes = attrs.merge(complete: true)
+      if subject.has_changes_to_save?
+        subject.last_sign_in_at = Time.current
+        subject.save!
+      else
+        # Intentionally skipping callbacks so updated_at remains unchanged.
+        # rubocop:disable Rails/SkipsModelValidations
+        subject.update_column :last_sign_in_at, Time.current
+        # rubocop:enable Rails/SkipsModelValidations
+      end
       update_roles(subject)
       subject
     end

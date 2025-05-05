@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_15_042123) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_05_025045) do
   create_table "activations", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "federation_object_type", null: false
     t.integer "federation_object_id", null: false
@@ -221,6 +221,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_15_042123) do
     t.boolean "complete", default: true, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.datetime "last_sign_in_at"
     t.index ["shared_token"], name: "index_subjects_on_shared_token", unique: true
     t.index ["targeted_id"], name: "index_subjects_on_targeted_id", unique: true
   end
