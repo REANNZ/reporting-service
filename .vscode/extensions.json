@@ -22,7 +22,6 @@
     "Orta.vscode-jest",
     "leizongmin.node-module-intellisense",
     "christian-kohler.npm-intellisense",
-    "esbenp.prettier-vscode",
 
     // linting
     "dbaeumer.vscode-eslint",
@@ -44,12 +43,8 @@
     "EditorConfig.EditorConfig",
 
     // ruby
-    "aliariff.vscode-erb-beautify",
     "rubocop.vscode-rubocop",
     "Shopify.ruby-lsp",
-    "connorshea.vscode-ruby-test-adapter",
-    "sianglim.slim",
-    "aliariff.slim-lint",
     "KoichiSasada.vscode-rdbg",
 
     // random
@@ -58,7 +53,6 @@
     "christian-kohler.path-intellisense",
     "alefragnani.project-manager",
     "cssho.vscode-svgviewer",
-    "TabNine.tabnine-vscode",
     "wayou.vscode-todo-highlight",
     "aaron-bond.better-comments",
     "vscode-icons-team.vscode-icons",
@@ -67,9 +61,12 @@
     //test
     "ms-vscode.test-adapter-converter",
     "hbenl.vscode-test-explorer",
+    "connorshea.vscode-ruby-test-adapter",
 
     //github
     "github.vscode-github-actions",
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
 
     // git
     "codezombiech.gitignore",
@@ -89,6 +86,9 @@
     // markdown
     "yzhang.markdown-all-in-one",
     "bierner.markdown-mermaid",
-    "DavidAnson.vscode-markdownlint"
+    "DavidAnson.vscode-markdownlint",
+
+    // sql
+    "dorzey.vscode-sqlfluff"
   ]
 }

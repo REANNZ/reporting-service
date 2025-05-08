@@ -44,7 +44,7 @@ RUN  yum -y update \
     && dnf module install -y nodejs:22 \
     && yum install -y \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    yarnpkg-1.22.22-5.el9  \
+    yarnpkg-1.22.22-7.el9  \
     && yum -y clean all \
     && rm -rf /var/cache/yum
 
@@ -70,7 +70,7 @@ RUN yum -y update \
     && yum -y install \
     --enablerepo=devel \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    ImageMagick-devel-6.9.13.17-1.el9 \
+    ImageMagick-devel-6.9.13.25-1.el9 \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
     advancecomp-2.6-4.el9 \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
@@ -141,7 +141,7 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-503.33.1.el9_5 \
+    kernel-devel-5.14.0-503.40.1.el9_5 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
     mysql-devel-8.0.41-2.el9_5 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
