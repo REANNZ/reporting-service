@@ -26,7 +26,9 @@ module ReportingService
           endpoint: ENV.fetch('SQS_ENDPOINT', 'http://localhost:9324'),
           encryption_key: ENV.fetch('SQS_DS_EVENT_ENCRYPTION_KEY', ''),
           queues: {
-            discovery: ENV.fetch('SQS_DS_EVENT_QUEUE', 'http://localhost:9324/queue/discovery-service-development')
+            discovery: ENV.fetch('SQS_DS_EVENT_QUEUE', 'http://localhost:9324/queue/discovery-service-development'),
+            federation_manager:
+              ENV.fetch('SQS_DS_EVENT_FM_QUEUE', 'http://localhost:9324/queue/discovery-service-fm-development')
           }
         },
         ide: {
