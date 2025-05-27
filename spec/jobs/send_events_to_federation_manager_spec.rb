@@ -6,7 +6,8 @@ RSpec.describe SendEventsToFederationManager, type: :job do
   describe '#perform' do
     subject(:run) { described_class.new.perform }
 
-    let(:client) { double(Aws::SQS::Client) }
+    let(:sqs_client) { double(Aws::SQS::Client) }
+    let(:redis_client) { Rails.application.config.redis_client }
     let(:rsa_key_string) { <<~RAWCERT }
         -----BEGIN RSA PRIVATE KEY-----
         MIIBOwIBAAJBANXI+YMTbremHgVLuc/AbaZTKeqvXgs32Em6OOCbE7P+flb3qAMO
@@ -35,21 +36,80 @@ RSpec.describe SendEventsToFederationManager, type: :job do
     let(:events) { create_list(:discovery_service_event, count) }
 
     let(:count) { 1000 }
+    let(:expect_count) { count / described_class::BATCH_SIZE }
 
     before do
       events
       allow(Rails.application.config.reporting_service).to receive(:sqs).and_return(sqs_config)
 
-      allow(Aws::SQS::Client).to receive(:new).with(sqs_config.slice(:endpoint, :region)).and_return(client)
+      allow(Aws::SQS::Client).to receive(:new).with(sqs_config.slice(:endpoint, :region)).and_return(sqs_client)
 
-      allow(client).to receive(:send_message).with(
+      allow(redis_client).to receive(:set).and_call_original
+      allow(redis_client).to receive(:get).and_call_original
+
+      allow(sqs_client).to receive(:send_message).with(
         { message_body: anything, queue_url: sqs_config[:queues][:federation_manager] }
       ).and_return(anything)
     end
 
-    it 'creates the events' do
+    it 'creates the events, doesn\'t after the first run' do
       run
-      expect(client).to have_received(:send_message).exactly(count / 10).times
+      expect(sqs_client).to have_received(:send_message).exactly(expect_count).times
+      expect(redis_client).to have_received(:set).exactly(expect_count).times
+      expect(redis_client.get(described_class::START_ID_KEY)).to match(
+        (events.last(described_class::BATCH_SIZE).first.id - 1).to_s
+      )
+      RSpec::Mocks.space.proxy_for(redis_client).reset
+      RSpec::Mocks.space.proxy_for(sqs_client).reset
+
+      allow(redis_client).to receive(:set).and_call_original
+      allow(redis_client).to receive(:get).and_call_original
+      allow(sqs_client).to receive(:send_message).with(
+        { message_body: anything, queue_url: sqs_config[:queues][:federation_manager] }
+      ).and_return(anything)
+      run
+      expect(sqs_client).not_to have_received(:send_message)
+      expect(redis_client).not_to have_received(:set)
+    end
+
+    context 'when START_ID is set' do
+      before do
+        redis_client.set(described_class::START_ID_KEY, events.last(offset).first.id)
+        RSpec::Mocks.space.proxy_for(redis_client).reset
+        allow(redis_client).to receive(:set).and_call_original
+      end
+
+      let(:offset) { described_class::BATCH_SIZE * 2 }
+      let(:expect_count) { offset / described_class::BATCH_SIZE }
+
+      it 'starts from the specified ID' do
+        run
+        expect(sqs_client).to have_received(:send_message).exactly(expect_count).times
+        expect(redis_client).to have_received(:set).exactly(expect_count).times
+        expect(redis_client.get(described_class::START_ID_KEY)).to match(
+          (events.last(described_class::BATCH_SIZE).first.id - 1).to_s
+        )
+      end
+    end
+
+    context 'when START_ID ENV is set' do
+      before do
+        allow(ENV).to receive(:fetch).with(described_class::START_ID_KEY.upcase, nil).and_return(
+          events.last(offset).first.id.to_s
+        )
+      end
+
+      let(:offset) { described_class::BATCH_SIZE * 2 }
+      let(:expect_count) { offset / described_class::BATCH_SIZE }
+
+      it 'starts from the specified ID, calls set an extra time' do
+        run
+        expect(sqs_client).to have_received(:send_message).exactly(expect_count).times
+        expect(redis_client).to have_received(:set).exactly(expect_count).times
+        expect(redis_client.get(described_class::START_ID_KEY)).to match(
+          (events.last(described_class::BATCH_SIZE).first.id - 1).to_s
+        )
+      end
     end
   end
 end
