@@ -25,7 +25,7 @@ RUN_ARGS=
 
 run-image:
 	make run-generic-image-command ADDITIONAL_ARGS="${RUN_ARGS}"
-FILE=
+TARGET=
 
 TESTS_ARGS=\
 -p 12347:12347 \
@@ -47,7 +47,7 @@ run-image-tests:
 	@make run-generic-image-command \
 		APP_NAME_POSTFIX="-tests" \
 		ADDITIONAL_ARGS="${TESTS_ARGS}" \
-		COMMAND="bundle exec rspec -fd ${FILE}"
+		COMMAND="bundle exec rspec -fd ${TARGET}"
 
 
 test: docker-login
