@@ -10,7 +10,7 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
   let(:default_org_data) do
     {
       id: org_fr_id,
-      domain: "reannz.co.nz",
+      domain: Faker::Internet.domain_name,
       display_name: Faker::Company.name,
       functioning: true,
       created_at: 2.years.ago.utc.xmlschema,
@@ -366,7 +366,7 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         Array.new(10) do
           {
             id: (i += 1),
-            domain: "#{i + 1}.reannz.co.nz",
+            domain: Faker::Internet.domain_name,
             display_name: Faker::Company.name,
             functioning: true,
             created_at: 2.years.ago.utc.xmlschema,
