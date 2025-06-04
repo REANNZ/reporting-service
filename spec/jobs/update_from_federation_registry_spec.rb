@@ -107,6 +107,14 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
     end
   end
 
+  before 'IdentityProvider sync' do
+    allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+  end
+
+  before 'ServiceProdiver sync' do
+    allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+  end
+
   describe '#perform' do
     def run
       subject.perform
@@ -184,9 +192,6 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
 
     shared_examples 'sync of an object with attributes' do
       context 'with a new attribute' do
-        before do
-          allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-        end
         it 'adds the attribute' do
           expect { run }.to change(attribute_scope, :count).by(1)
           expect(attribute_scope.last.saml_attribute).to have_attributes(
@@ -241,9 +246,6 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         let(:scope) { organization.identity_providers }
 
         context 'for a new identity provider' do
-          before do
-            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-          end
           it_behaves_like 'sync of a new object'
 
           context 'with the wrong organization' do
@@ -256,18 +258,12 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         end
 
         context 'for an existing identity provider' do
-          before do
-            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-          end
           let!(:object) { create(:identity_provider, entity_id: idp_entity_id, organization:) }
 
           it_behaves_like 'sync of an existing object'
         end
 
         context 'provided attributes' do
-          before do
-            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-          end
           let!(:object) { create(:identity_provider, entity_id: idp_entity_id, organization:) }
 
           let(:attribute_scope) { object.identity_provider_saml_attributes }
@@ -288,9 +284,6 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         let(:scope) { organization.service_providers }
 
         context 'for a new service provider' do
-          before do
-            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-          end
           it_behaves_like 'sync of a new object'
 
           context 'with the wrong organization' do
@@ -303,18 +296,12 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         end
 
         context 'for an existing service provider' do
-          before do
-            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-          end
           let!(:object) { create(:service_provider, entity_id: sp_entity_id, organization:) }
 
           it_behaves_like 'sync of an existing object'
         end
 
         context 'requested attributes' do
-          before do
-            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-          end
           let!(:object) { create(:service_provider, entity_id: sp_entity_id, organization:) }
 
           let(:attribute_scope) { object.service_provider_saml_attributes }
