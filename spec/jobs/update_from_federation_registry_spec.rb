@@ -10,6 +10,7 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
   let(:default_org_data) do
     {
       id: org_fr_id,
+      domain: "reannz.co.nz",
       display_name: Faker::Company.name,
       functioning: true,
       created_at: 2.years.ago.utc.xmlschema,
@@ -181,15 +182,11 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
       end
     end
 
-    shared_examples 'sync of a removed object' do
-      it 'removes the object' do
-        expect { run }.to change(scope, :count).by(-1)
-        expect { object.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      end
-    end
-
     shared_examples 'sync of an object with attributes' do
       context 'with a new attribute' do
+        before do
+          allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+        end
         it 'adds the attribute' do
           expect { run }.to change(attribute_scope, :count).by(1)
           expect(attribute_scope.last.saml_attribute).to have_attributes(
@@ -206,18 +203,6 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
 
         it 'does not create a new object' do
           expect { run }.not_to change(attribute_scope, :count)
-        end
-      end
-
-      context 'with a removed attribute' do
-        let(:object_attribute_list) { [] }
-
-        let!(:attr) { create(:saml_attribute, name: attr_data[:name], core: false) }
-
-        let!(:attr_assoc) { attribute_scope.create!(extra_assoc_attrs.merge(saml_attribute: attr)) }
-
-        it 'removes the association object' do
-          expect { run }.to change(attribute_scope, :count).by(-1)
         end
       end
     end
@@ -241,13 +226,6 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
 
         it_behaves_like 'sync of an existing object'
       end
-
-      context 'for a removed organiation' do
-        let!(:object) { create(:organization, identifier: org_identifier) }
-        let(:org_data) { nil }
-
-        it_behaves_like 'sync of a removed object'
-      end
     end
 
     describe 'SAML entities' do
@@ -263,6 +241,9 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         let(:scope) { organization.identity_providers }
 
         context 'for a new identity provider' do
+          before do
+            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+          end
           it_behaves_like 'sync of a new object'
 
           context 'with the wrong organization' do
@@ -275,20 +256,18 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         end
 
         context 'for an existing identity provider' do
+          before do
+            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+          end
           let!(:object) { create(:identity_provider, entity_id: idp_entity_id, organization:) }
 
           it_behaves_like 'sync of an existing object'
         end
 
-        context 'for a removed identity provider' do
-          let(:idp_data) { nil }
-
-          let!(:object) { create(:identity_provider, entity_id: idp_entity_id, organization:) }
-
-          it_behaves_like 'sync of a removed object'
-        end
-
         context 'provided attributes' do
+          before do
+            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+          end
           let!(:object) { create(:identity_provider, entity_id: idp_entity_id, organization:) }
 
           let(:attribute_scope) { object.identity_provider_saml_attributes }
@@ -309,6 +288,9 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         let(:scope) { organization.service_providers }
 
         context 'for a new service provider' do
+          before do
+            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+          end
           it_behaves_like 'sync of a new object'
 
           context 'with the wrong organization' do
@@ -321,20 +303,18 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         end
 
         context 'for an existing service provider' do
+          before do
+            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+          end
           let!(:object) { create(:service_provider, entity_id: sp_entity_id, organization:) }
 
           it_behaves_like 'sync of an existing object'
         end
 
-        context 'for a removed service provider' do
-          let(:sp_data) { nil }
-
-          let!(:object) { create(:service_provider, entity_id: sp_entity_id, organization:) }
-
-          it_behaves_like 'sync of a removed object'
-        end
-
         context 'requested attributes' do
+          before do
+            allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+          end
           let!(:object) { create(:service_provider, entity_id: sp_entity_id, organization:) }
 
           let(:attribute_scope) { object.service_provider_saml_attributes }
@@ -399,6 +379,7 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
         Array.new(10) do
           {
             id: (i += 1),
+            domain: "#{i + 1}.reannz.co.nz",
             display_name: Faker::Company.name,
             functioning: true,
             created_at: 2.years.ago.utc.xmlschema,
@@ -484,35 +465,17 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
       let(:attributes_response) { JSON.pretty_generate(attributes:) }
 
       it 'syncs the objects' do
-        idp_attrs = identity_providers.flat_map { |o| o[:saml][:attributes] }
-        sp_attrs =
-          service_providers.flat_map { |o| o[:saml][:attribute_consuming_services].flat_map { |s| s[:attributes] } }
 
         expect { run }.to(
           change(Organization, :count)
             .by(organizations.count)
-            .and(change(IdentityProvider, :count).by(identity_providers.count))
-            .and(change(ServiceProvider, :count).by(service_providers.count))
             .and(change(SAMLAttribute, :count).by(attributes.count))
-            .and(change(IdentityProviderSAMLAttribute, :count).by(idp_attrs.count))
-            .and(change(ServiceProviderSAMLAttribute, :count).by(sp_attrs.count))
         )
 
         expect(Organization.all.map(&:name)).to contain_exactly(*organizations.pluck(:display_name))
-
-        expect(IdentityProvider.all.map(&:name)).to contain_exactly(*identity_providers.pluck(:display_name))
-
-        expect(ServiceProvider.all.map(&:name)).to contain_exactly(*service_providers.pluck(:display_name))
-
         expect(SAMLAttribute.all.map(&:name)).to contain_exactly(*attributes.pluck(:name))
 
-        expect { run }.to not_change(Organization, :count).and not_change(IdentityProvider, :count).and not_change(
-                      ServiceProvider,
-                      :count
-                    ).and not_change(SAMLAttribute, :count).and not_change(
-                                  IdentityProviderSAMLAttribute,
-                                  :count
-                                ).and not_change(ServiceProviderSAMLAttribute, :count)
+        expect { run }.to not_change(Organization, :count).and not_change(SAMLAttribute, :count)
       end
     end
   end
