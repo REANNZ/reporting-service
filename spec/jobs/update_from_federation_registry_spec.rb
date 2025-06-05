@@ -107,14 +107,6 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
     end
   end
 
-  before 'IdentityProvider sync' do
-    allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-  end
-
-  before 'ServiceProdiver sync' do
-    allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-  end
-
   describe '#perform' do
     def run
       subject.perform
@@ -241,6 +233,11 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
       let(:expected_attrs) { { name: obj_data[:display_name], entity_id: obj_data[:saml][:entity][:entity_id] } }
 
       describe 'IdentityProvider sync' do
+
+        before do
+          allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+        end
+
         let(:idp_data) { default_idp_data.merge(extra_obj_attrs) }
         let(:obj_data) { idp_data }
         let(:scope) { organization.identity_providers }
@@ -279,6 +276,11 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
       end
 
       describe 'ServiceProvider sync' do
+
+        before do
+          allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
+        end
+
         let(:sp_data) { default_sp_data.merge(extra_obj_attrs) }
         let(:obj_data) { sp_data }
         let(:scope) { organization.service_providers }
