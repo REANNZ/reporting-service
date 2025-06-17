@@ -4,9 +4,19 @@ class SendEventsToFederationManager
   START_ID_KEY = 'send_fm_events_start_id'
   BATCH_SIZE = 200
 
-  def perform
+  def perform(unique_ids: [])
+    discovery_events =
+      (
+        if unique_ids.any?
+          DiscoveryServiceEvent.where(unique_id: unique_ids)
+        else
+          DiscoveryServiceEvent.where(id: start_id..)
+        end
+      )
     # max sqs payload is 256kb
-    DiscoveryServiceEvent.where(id: start_id..).in_batches(of: BATCH_SIZE) { |events| send_events(events:) }
+    discovery_events.in_batches(of: BATCH_SIZE) { |events| send_events(events:) }
+    # reset the start_id if used unique_id
+    redis.set(START_ID_KEY, 0) if unique_ids.any?
   end
 
   private

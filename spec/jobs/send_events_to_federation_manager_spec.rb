@@ -4,8 +4,9 @@ require 'rails_helper'
 
 RSpec.describe SendEventsToFederationManager, type: :job do
   describe '#perform' do
-    subject(:run) { described_class.new.perform }
+    subject(:run) { described_class.new.perform(unique_ids:) }
 
+    let(:unique_ids) { [] }
     let(:sqs_client) { double(Aws::SQS::Client) }
     let(:redis_client) { Rails.application.config.redis_client }
     let(:rsa_key_string) { <<~RAWCERT }
@@ -109,6 +110,19 @@ RSpec.describe SendEventsToFederationManager, type: :job do
         expect(redis_client.get(described_class::START_ID_KEY)).to match(
           (events.last(described_class::BATCH_SIZE).first.id - 1).to_s
         )
+      end
+    end
+
+    context 'when unique_ids is provided' do
+      let(:unique_ids) { events.first(described_class::BATCH_SIZE * 3).map(&:unique_id) }
+
+      let(:expect_count) { 3 }
+
+      it 'processes only the specified unique IDs' do
+        run
+        expect(sqs_client).to have_received(:send_message).exactly(expect_count).times
+        expect(redis_client).to have_received(:set).exactly(expect_count + 1).times
+        expect(redis_client.get(described_class::START_ID_KEY)).to eq('0')
       end
     end
   end
