@@ -3,11 +3,11 @@
 
 require_relative '../config/environment'
 
-id_file = ENV.fetch('UNIQUE_IDS_FILE', nil)
-unique_ids = []
+id_file = ENV.fetch('IDS_FILE', nil)
+ids = []
 if id_file.present?
   # expecting a file with unique IDs, separated by spaces
-  unique_ids = File.read(id_file).split(' ')
+  ids = File.read(id_file).split(' ')
 end
 
-SendEventsToFederationManager.new.perform(unique_ids:)
+SendEventsToFederationManager.new.perform(ids:)
