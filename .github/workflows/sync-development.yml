@@ -21,3 +21,4 @@ jobs:
           ROLE: ${{ secrets.ROLE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APP: reporting-service
+          ECR_REPOSITORY: reporting-service
