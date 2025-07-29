@@ -23,7 +23,7 @@ USER root
 RUN yum -y update \
     && yum install -y \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
-    jq-1.6-17.el9 \
+    jq-1.6-17.el9_6.2 \
     && yum -y clean all \
     && rm -rf /var/cache/yum
 
@@ -44,7 +44,7 @@ RUN  yum -y update \
     && dnf module install -y nodejs:22 \
     && yum install -y \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    yarnpkg-1.22.22-8.el9  \
+    yarnpkg-1.22.22-9.el9  \
     && yum -y clean all \
     && rm -rf /var/cache/yum
 
@@ -82,7 +82,7 @@ RUN yum -y update \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
     pngcrush-1.8.13-9.el9 \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
-    optipng-0.7.8-1.el9 \
+    optipng-7.9.1-1.el9 \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
     pngquant-2.17.0-2.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
@@ -141,7 +141,7 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-570.23.1.el9_6 \
+    kernel-devel-5.14.0-570.28.1.el9_6 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
     mysql-devel-8.0.41-2.el9_5 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
