@@ -11,9 +11,13 @@ default: &default
 development:
   <<: *default
   database: <%= ENV['REPORTING_DB_NAME'] || 'reporting_dev' %>
+  read_timeout: <%= ENV.fetch('MYSQL_MAX_EXECUTION_TIME_SECONDS') { 60 } %>
+  write_timeout: <%= ENV.fetch('MYSQL_MAX_EXECUTION_TIME_SECONDS') { 60 } %>
 production:
   <<: *default
   database: <%= ENV['REPORTING_DB_NAME'] || 'reporting_production' %>
+  read_timeout: <%= ENV['MYSQL_MAX_EXECUTION_TIME_SECONDS'] %>
+  write_timeout: <%= ENV['MYSQL_MAX_EXECUTION_TIME_SECONDS'] %>
 test:
   <<: *default
   database: reporting_test
