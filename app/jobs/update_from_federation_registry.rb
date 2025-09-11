@@ -29,11 +29,9 @@ class UpdateFromFederationRegistry
   end
 
   def sync_organizations_from_api
-    organization_objects.flat_map do |org_data|
+    organization_objects.map do |org_data|
       fix_organization_identifier(org_data) if saml_metadata_sync_enabled?
-      org = sync_organization(org_data)
-
-      [org].compact
+      sync_organization(org_data)
     end
   end
 
