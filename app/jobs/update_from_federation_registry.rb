@@ -2,10 +2,11 @@
 
 class UpdateFromFederationRegistry
   include QueryFederationRegistry
+  include QueryAPI
 
   def perform
     ActiveRecord::Base.transaction do
-      touched = sync_attributes + sync_organizations
+      touched = sync_attributes + sync_organizations_from_api
       clean(touched)
     end
   end
@@ -24,6 +25,15 @@ class UpdateFromFederationRegistry
       sps = sync_service_providers(org) unless saml_metadata_sync_enabled?
 
       [org, *idps, *sps].compact
+    end
+  end
+
+  def sync_organizations_from_api
+    organization_objects.flat_map do |org_data|
+      fix_organization_identifier(org_data) if saml_metadata_sync_enabled?
+      org = sync_organization(org_data)
+
+      [org].compact
     end
   end
 
