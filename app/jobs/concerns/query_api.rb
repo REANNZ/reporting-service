@@ -21,13 +21,13 @@ module QueryAPI
   end
 
   def api_data(endpoint)
-    response = Net::HTTP.get_response(endpoint)
+    response = Net::HTTP.get_response(URI(endpoint))
     response.value
     ImplicitSchema.new(JSON.parse(response.body.to_s, symbolize_names: true))
   end
 
   def organizations_url
-    URI(api_config[:organizations_url])
+    api_config[:organizations_url]
   end
 
   def api_config

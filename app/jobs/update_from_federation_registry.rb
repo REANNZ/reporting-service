@@ -6,7 +6,8 @@ class UpdateFromFederationRegistry
 
   def perform
     ActiveRecord::Base.transaction do
-      touched = sync_attributes + sync_organizations_from_api
+      touched = sync_attributes +
+        (organizations_url ? sync_organizations_from_api : sync_organizations)
       clean(touched)
     end
   end
