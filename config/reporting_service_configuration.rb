@@ -109,6 +109,7 @@ module ReportingService
       {
         api: {
           organizations_url: ENV.fetch('ORGANIZATIONS_URL', nil),
+          attributes_base_url: ENV.fetch('ATTRIBUTES_BASE_URL', nil)
         }
       }
     end

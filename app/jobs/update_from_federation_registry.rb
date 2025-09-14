@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/ClassLength
 
 class UpdateFromFederationRegistry
   include QueryFederationRegistry
@@ -6,7 +7,7 @@ class UpdateFromFederationRegistry
 
   def perform
     ActiveRecord::Base.transaction do
-      touched = sync_attributes +
+      touched = (attributes_base_url ? sync_attributes_from_api : sync_attributes) +
         (organizations_url ? sync_organizations_from_api : sync_organizations)
       clean(touched)
     end
@@ -16,6 +17,10 @@ class UpdateFromFederationRegistry
 
   def sync_attributes
     fr_objects(:attributes, 'attributes').map { |attr_data| sync_attribute(attr_data) }
+  end
+
+  def sync_attributes_from_api
+    attribute_objects.map { |attr_data| sync_attribute(attr_data) }
   end
 
   def sync_organizations
@@ -64,7 +69,8 @@ class UpdateFromFederationRegistry
 
   def sync_attribute(attr_data)
     attribute = SAMLAttribute.find_or_initialize_by(name: attr_data[:name])
-    attribute.update!(core: (attr_data[:category][:name] == 'Core'), description: attr_data[:description])
+    # core: split category name by whitespace and see if it contains Core (such as "Tuakiri Core Attributes")
+    attribute.update!(core: attr_data[:category][:name].split.include?('Core'), description: attr_data[:description])
 
     attribute
   end
@@ -146,3 +152,4 @@ class UpdateFromFederationRegistry
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
