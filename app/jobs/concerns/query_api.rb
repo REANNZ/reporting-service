@@ -24,11 +24,11 @@ module QueryAPI
   def attribute_objects
     @attr_objects ||= api_data("#{attributes_base_url}/attributes.json")
     @category_objects ||= api_data("#{attributes_base_url}/categories.json")
-    @category_attributes ||= {}
     @category_objects.each do |cat|
-      # For each category, extract the list of attributes
-      # (API returns list of lists, where inner list has attribute name followed by its documentation link)
-      @category_attributes[cat[:id]] ||= api_data("#{attributes_base_url}/categories/#{cat[:id]}.json")[:category_attributes].pluck(0)
+      # Add to each category the list of attributes in the category.
+      # API returns an dict where category_attributes is a list of lists,
+      # with the inner lists having attribute name followed by its documentation link.
+      cat[:attributes] ||= api_data("#{attributes_base_url}/categories/#{cat[:id]}.json")[:category_attributes].pluck(0)
     end
     Enumerator.new { |y| @attr_objects.each { |o| y << api_attr_to_fr_attr(o) } }
   end
@@ -46,11 +46,8 @@ module QueryAPI
   end
 
   def atribute_category_name(a)
-    # Find id of category that lists this attribute
-    cat_id = @category_attributes.select { |_id, attrs| attrs.include?(a) }.keys.first
-
-    # Get the category name
-    cat_obj = @category_objects.find { |c| c[:id] == cat_id }
+    # Find the category that lists this attribute
+    cat_obj = @category_objects.find { |c| c[:attributes].include?(a) }
     cat_obj ? cat_obj[:name] : 'Unknown'
   end
 
