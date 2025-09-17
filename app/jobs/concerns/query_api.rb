@@ -28,7 +28,7 @@ module QueryAPI
     @category_objects.each do |cat|
       # For each category, extract the list of attributes
       # (API returns list of lists, where inner list has attribute name followed by its documentation link)
-      @category_attributes[cat[:id]] ||= api_data("#{attributes_base_url}/categories/#{cat[:id]}.json").pluck(0)
+      @category_attributes[cat[:id]] ||= api_data("#{attributes_base_url}/categories/#{cat[:id]}.json")[:category_attributes].pluck(0)
     end
     Enumerator.new { |y| @attr_objects.each { |o| y << api_attr_to_fr_attr(o) } }
   end
