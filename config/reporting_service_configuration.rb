@@ -11,7 +11,7 @@ module ReportingService
 
   class ConfigurationGenerator
     def build_configuration
-      base_config.merge(admins_config, redis, federation_registry, rapid_connect, saml_metadata)
+      base_config.merge(admins_config, redis, federation_registry, rapid_connect, saml_metadata, api)
     end
 
     private
@@ -101,6 +101,15 @@ module ReportingService
         saml_metadata: {
           metadata_url: ENV.fetch('SAML_METADATA_URL', nil),
           metadata_cert_path: ENV.fetch('SAML_METADATA_CERT_PATH', nil)
+        }
+      }
+    end
+
+    def api
+      {
+        api: {
+          organizations_url: ENV.fetch('ORGANIZATIONS_URL', nil),
+          attributes_base_url: ENV.fetch('ATTRIBUTES_BASE_URL', nil)
         }
       }
     end
