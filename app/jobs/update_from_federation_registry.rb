@@ -1,11 +1,14 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/ClassLength
 
 class UpdateFromFederationRegistry
   include QueryFederationRegistry
+  include QueryAPI
 
   def perform
     ActiveRecord::Base.transaction do
-      touched = sync_attributes + sync_organizations
+      touched = (attributes_base_url ? sync_attributes_from_api : sync_attributes) +
+        (organizations_url ? sync_organizations_from_api : sync_organizations)
       clean(touched)
     end
   end
@@ -16,6 +19,10 @@ class UpdateFromFederationRegistry
     fr_objects(:attributes, 'attributes').map { |attr_data| sync_attribute(attr_data) }
   end
 
+  def sync_attributes_from_api
+    attribute_objects.map { |attr_data| sync_attribute(attr_data) }
+  end
+
   def sync_organizations
     fr_objects(:organizations, 'organizations').flat_map do |org_data|
       fix_organization_identifier(org_data) if saml_metadata_sync_enabled?
@@ -24,6 +31,13 @@ class UpdateFromFederationRegistry
       sps = sync_service_providers(org) unless saml_metadata_sync_enabled?
 
       [org, *idps, *sps].compact
+    end
+  end
+
+  def sync_organizations_from_api
+    organization_objects.map do |org_data|
+      fix_organization_identifier(org_data) if saml_metadata_sync_enabled?
+      sync_organization(org_data)
     end
   end
 
@@ -55,7 +69,8 @@ class UpdateFromFederationRegistry
 
   def sync_attribute(attr_data)
     attribute = SAMLAttribute.find_or_initialize_by(name: attr_data[:name])
-    attribute.update!(core: (attr_data[:category][:name] == 'Core'), description: attr_data[:description])
+    # core: split category name by whitespace and see if it contains Core (such as "Tuakiri Core Attributes")
+    attribute.update!(core: attr_data[:category][:name].split.include?('Core'), description: attr_data[:description])
 
     attribute
   end
@@ -137,3 +152,4 @@ class UpdateFromFederationRegistry
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
