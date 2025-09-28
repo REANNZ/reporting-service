@@ -20,7 +20,7 @@ RUN mkdir -p ./public/assets \
 
 USER root
 
-RUN yum -y update \
+RUN yum -y update --allowerasing \
     && yum install -y \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     jq-1.6-17.el9_6.2 \
@@ -36,7 +36,7 @@ USER app
 FROM base AS js-dependencies
 USER root
 
-RUN yum -y update \
+RUN yum -y update --allowerasing \
     && dnf module install -y nodejs:22 \
     && yum -y clean all \
     && rm -rf /var/cache/yum \
@@ -67,7 +67,7 @@ RUN yarn install
 FROM base AS imagick-dependencies
 USER root
 
-RUN yum -y update \
+RUN yum -y update --allowerasing \
     && yum -y install \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
     epel-release-9-7.el9 \
@@ -118,7 +118,7 @@ USER root
 # Install chromium in a separate RUN call so we can ignore the lint violation just once.
 # We don't pin chrome because it's only used in the test suite. It is not present in the production image.
 # hadolint ignore=DL3033
-RUN yum -y update \
+RUN yum -y update --allowerasing \
     && yum -y install \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
     epel-release-9-7.el9 \
@@ -127,7 +127,7 @@ RUN yum -y update \
     chromium \
     && yum -y clean all
 
-RUN yum -y update \
+RUN yum -y update --allowerasing \
     && yum install -y \
     --enablerepo=devel \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
