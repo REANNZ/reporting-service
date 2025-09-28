@@ -444,7 +444,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     stringio (3.1.7)
-    syntax_tree (6.2.0)
+    syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
     temple (0.10.3)
     terminal-table (3.0.2)
@@ -733,7 +733,7 @@ CHECKSUMS
   sprockets (3.7.5) sha256=72c20f256548f8a37fe7db41d96be86c3262fddaf4ebe9d69ec8317394fed383
   sprockets-rails (3.4.2) sha256=36d6327757ccf7460a00d1d52b2d5ef0019a4670503046a129fa1fb1300931ad
   stringio (3.1.7) sha256=5b78b7cb242a315fb4fca61a8255d62ec438f58da2b90be66048546ade4507fa
-  syntax_tree (6.2.0) sha256=a50a01c246601af3c258edbb6b12e44373d17966ab3bebd1f7224b3b994a343d
+  syntax_tree (6.3.0) sha256=56e25a9692c798ec94c5442fe94c5e94af76bef91edc8bb02052cbdecf35f13d
   temple (0.10.3) sha256=df3145fe6577af1e25387eb7f7122d32ed51bdb6f2e7bb0f4fbf07b66151913b
   terminal-table (3.0.2) sha256=f951b6af5f3e00203fb290a669e0a85c5dd5b051b3b023392ccfd67ba5abae91
   terser (1.2.5) sha256=f1e49770b61af6897770217f87c6574d5e6f81881712fb0fc6a609bab0ccbfa7
