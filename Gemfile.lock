@@ -426,7 +426,7 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
-    simplecov-console (0.9.3)
+    simplecov-console (0.9.4)
       ansi
       simplecov
       terminal-table
@@ -726,7 +726,7 @@ CHECKSUMS
   sentry-ruby (5.21.0) sha256=294e0dd59afce7e08ba22a4e880924345c75c3e858dc8ee23553716793f78629
   shoulda-matchers (6.4.0) sha256=9055bb7f4bb342125fb860809798855c630e05ef5e75837b3168b8e6ee1608b0
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
-  simplecov-console (0.9.3) sha256=97c3374d943ff0b2c1009481595623b0fc566bdfad13654eedb896098da15771
+  simplecov-console (0.9.4) sha256=a5c7d0ae60e0307a77e0fadc532dd78c42e0b954af42483dcac003fe9187065b
   simplecov-html (0.12.3) sha256=4b1aad33259ffba8b29c6876c12db70e5750cb9df829486e4c6e5da4fa0aa07b
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   slim (5.2.1) sha256=72351dff7e2ff20e2d5c393cfc385bb9142cef5db059141628fd7163ac3c13e7
