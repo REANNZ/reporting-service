@@ -20,7 +20,7 @@ RUN mkdir -p ./public/assets \
 
 USER root
 
-RUN yum -y update \
+RUN yum -y update --allowerasing \
     && yum install -y \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     jq-1.6-17.el9_6.2 \
@@ -36,17 +36,16 @@ USER app
 FROM base AS js-dependencies
 USER root
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN  yum -y update \
-    && yum install -y \
-    # renovate: datasource=yum repo=rocky-9-extras-x86_64
-    epel-release-9-7.el9 \
+RUN yum -y update --allowerasing \
     && dnf module install -y nodejs:22 \
-    && yum install -y \
-    # renovate: datasource=yum repo=epel-9-everything-x86_64
-    yarnpkg-1.22.22-11.el9  \
     && yum -y clean all \
-    && rm -rf /var/cache/yum
+    && rm -rf /var/cache/yum \
+    && npm install -g \
+        # TODO: renovate npm
+        # Issue URL: https://github.com/ausaccessfed/reporting-service/issues/827
+        svgo@3.3.2 \
+        corepack@0.34.0 \
+    && corepack enable
 
 # use ldd to get required libs
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -57,13 +56,18 @@ RUN ldd \
 
 USER app
 
-COPY --chown=app ./package.json ./yarn.lock ./
+COPY --chown=app \
+    ./package.json \
+    ./yarn.lock \
+    ./.yarnrc.yml \
+    ./
+
 RUN yarn install
 
 FROM base AS imagick-dependencies
 USER root
 
-RUN yum -y update \
+RUN yum -y update --allowerasing \
     && yum -y install \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
     epel-release-9-7.el9 \
@@ -114,7 +118,7 @@ USER root
 # Install chromium in a separate RUN call so we can ignore the lint violation just once.
 # We don't pin chrome because it's only used in the test suite. It is not present in the production image.
 # hadolint ignore=DL3033
-RUN yum -y update \
+RUN yum -y update --allowerasing \
     && yum -y install \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
     epel-release-9-7.el9 \
@@ -123,7 +127,7 @@ RUN yum -y update \
     chromium \
     && yum -y clean all
 
-RUN yum -y update \
+RUN yum -y update --allowerasing \
     && yum install -y \
     --enablerepo=devel \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
@@ -141,9 +145,9 @@ RUN yum -y update \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-570.39.1.el9_6 \
+    kernel-devel-5.14.0-570.42.2.el9_6 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
-    mysql-devel-8.0.41-2.el9_5 \
+    mysql-devel-8.0.43-1.el9_6 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     procps-ng-3.3.17-14.el9 \
     && yum -y clean all \
@@ -153,10 +157,17 @@ RUN yum -y update \
 ##  Copy yarn, node for linting
 COPY --from=js-dependencies /usr/bin/node /usr/lib/node_modules/npm/bin/npm /usr/bin/
 COPY --from=js-dependencies /usr/lib/node_modules /usr/bin/node_modules
-RUN ln -s /usr/bin/node_modules/yarn/bin/yarn /usr/bin/yarn
-# TODO: we could save some space by being selective here
-COPY --from=js-dependencies /app/node_modules/ ./node_modules/
+COPY --from=js-dependencies ${APP_DIR}/.yarn ${APP_DIR}/.yarn
+COPY --from=js-dependencies ${APP_DIR}/.cache ${APP_DIR}/.cache
+COPY --from=js-dependencies ${APP_DIR}/package.json ${APP_DIR}/package.json
+COPY --from=js-dependencies ${APP_DIR}/node_modules/ ${APP_DIR}/node_modules/
 COPY --from=js-dependencies /deps/lib64 /usr/lib64/
+COPY --from=js-dependencies /usr/local/lib/node_modules /usr/local/lib/node_modules
+# hadolint ignore=SC2086
+RUN for f in /usr/local/lib/node_modules/corepack/dist/*.js; do \
+        ln -s "$f" "/usr/local/bin/$(basename ${f%.js})"; \
+    done \
+    && corepack enable
 
 ## Copy imagick deps
 COPY --from=imagick-dependencies /usr/bin/convert \
