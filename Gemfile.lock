@@ -289,7 +289,7 @@ GEM
     puma (6.6.0)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (2.2.19)
+    rack (2.2.20)
     rack-test (2.2.0)
       rack (>= 1.3)
     rails (7.0.8.7)
@@ -690,7 +690,7 @@ CHECKSUMS
   public_suffix (5.1.1) sha256=250ec74630d735194c797491c85e3c6a141d7b5d9bd0b66a3fa6268cf67066ed
   puma (6.6.0) sha256=f25c06873eb3d5de5f0a4ebc783acc81a4ccfe580c760cfe323497798018ad87
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
-  rack (2.2.19) sha256=aa1c8956f8851abeeb13fa3affeb1aab914a3c213cf9e8088b6868e7686fcddc
+  rack (2.2.20) sha256=85da3447a4845230a00803d47413ed4d1dd9823f948a8d93c0b2d1e149c07170
   rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
   rails (7.0.8.7) sha256=5e67ed4dd915746349bfb8c7ae2f531d3a36eb68fbe2f60ede02a0500715cded
   rails-controller-testing (1.0.5) sha256=741448db59366073e86fc965ba403f881c636b79a2c39a48d0486f2607182e94
