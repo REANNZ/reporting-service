@@ -12,6 +12,9 @@
     "eslint-plugin-yml": "1.19.0",
     "prettier": "3.6.2"
   },
+  "resolutions": {
+    "js-yaml": "^4.1.1"
+  },
   "scripts": {
     "lint": "eslint . --quiet"
   },
