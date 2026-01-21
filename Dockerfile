@@ -23,7 +23,7 @@ USER root
 RUN yum -y update --allowerasing \
     && yum install -y \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
-    jq-1.6-17.el9_6.2 \
+    jq-1.6-19.el9 \
     && yum -y clean all \
     && rm -rf /var/cache/yum
 
@@ -70,7 +70,7 @@ USER root
 RUN yum -y update --allowerasing \
     && yum -y install \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
-    epel-release-9-7.el9 \
+    epel-release-9-10.el9 \
     && yum -y install \
     --enablerepo=devel \
     # renovate: datasource=yum repo=epel-9-everything-x86_64
@@ -121,7 +121,7 @@ USER root
 RUN yum -y update --allowerasing \
     && yum -y install \
     # renovate: datasource=yum repo=rocky-9-extras-x86_64
-    epel-release-9-7.el9 \
+    epel-release-9-10.el9 \
     && yum install -y \
     --enablerepo=devel \
     chromium \
@@ -139,15 +139,15 @@ RUN yum -y update --allowerasing \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
     automake-1.16.2-8.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    gcc-11.5.0-5.el9_5 \
+    gcc-11.5.0-11.el9 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    gcc-c++-11.5.0-5.el9_5 \
+    gcc-c++-11.5.0-11.el9 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     xz-5.2.5-8.el9_0 \
     # renovate: datasource=yum repo=rocky-9-appstream-x86_64
-    kernel-devel-5.14.0-570.49.1.el9_6 \
+    kernel-devel-5.14.0-611.20.1.el9_7 \
     # renovate: datasource=yum repo=rocky-9-crb-x86_64
-    mysql-devel-8.0.43-1.el9_6 \
+    mysql-devel-8.0.44-1.el9_7 \
     # renovate: datasource=yum repo=rocky-9-baseos-x86_64
     procps-ng-3.3.17-14.el9 \
     && yum -y clean all \
