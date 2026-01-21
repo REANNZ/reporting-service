@@ -34,6 +34,7 @@ html lang='en'
 
     section class='content'
       = render(partial: 'layouts/flashes')
+      = render(partial: 'layouts/deprecation_warning')
       main= yield
 
     == aaf_footer do

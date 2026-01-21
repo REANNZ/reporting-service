@@ -12,6 +12,7 @@ dump.rdb
 !**/*vscode/extensions.json
 node_modules
 #EOF_DISTRIBUTION
+!public/robots.txt
 config/rapidconnect.yml
 config/deploy.yml
 config/reporting_service.yml
