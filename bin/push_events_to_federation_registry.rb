@@ -72,7 +72,7 @@ class PushEventsToFederationRegistry
 
   def convert(event)
     {
-      date_created: Time.zone.parse(event[:timestamp]).utc.to_s(:db),
+      date_created: Time.zone.parse(event[:timestamp]).utc.to_fs(:db),
       hostname: e(@hostname),
       idp_entity: event[:selected_idp],
       idpid: resolve_idpid(event),
