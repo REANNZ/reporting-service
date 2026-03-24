@@ -3,7 +3,7 @@
 class DiscoveryServiceEvent < ApplicationRecord
   valhammer
 
-  belongs_to :identity_provider, foreign_key: :selected_idp, primary_key: :entity_id
+  belongs_to :identity_provider, foreign_key: :selected_idp, primary_key: :entity_id, optional: true
 
   belongs_to :service_provider, foreign_key: :initiating_sp, primary_key: :entity_id
 
