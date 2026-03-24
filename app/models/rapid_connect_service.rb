@@ -3,7 +3,7 @@
 class RapidConnectService < ApplicationRecord
   include FederationObject
 
-  belongs_to :organization
+  belongs_to :organization, optional: true
 
   has_many :activations, as: :federation_object, dependent: :destroy
 
