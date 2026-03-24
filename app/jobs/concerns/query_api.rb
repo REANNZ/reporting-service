@@ -58,7 +58,7 @@ module QueryAPI
     # Replace newlines with spaces, squeeze spaces
     d = d.gsub('\n', ' ').gsub('\r', ' ').squeeze(' ')
 
-    return d unless d.length>255
+    return d unless d.length > 255
 
     sentence_end = d.index('. ')
     if sentence_end && sentence_end < 255

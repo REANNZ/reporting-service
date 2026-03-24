@@ -233,10 +233,7 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
       let(:expected_attrs) { { name: obj_data[:display_name], entity_id: obj_data[:saml][:entity][:entity_id] } }
 
       describe 'IdentityProvider sync' do
-
-        before do
-          allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-        end
+        before { allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false) }
 
         let(:idp_data) { default_idp_data.merge(extra_obj_attrs) }
         let(:obj_data) { idp_data }
@@ -276,10 +273,7 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
       end
 
       describe 'ServiceProvider sync' do
-
-        before do
-          allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false)
-        end
+        before { allow(subject).to receive(:saml_metadata_sync_enabled?).and_return(false) }
 
         let(:sp_data) { default_sp_data.merge(extra_obj_attrs) }
         let(:obj_data) { sp_data }
@@ -454,11 +448,8 @@ RSpec.describe UpdateFromFederationRegistry, type: :job do
       let(:attributes_response) { JSON.pretty_generate(attributes:) }
 
       it 'syncs the objects' do
-
         expect { run }.to(
-          change(Organization, :count)
-            .by(organizations.count)
-            .and(change(SAMLAttribute, :count).by(attributes.count))
+          change(Organization, :count).by(organizations.count).and(change(SAMLAttribute, :count).by(attributes.count))
         )
 
         expect(Organization.all.map(&:name)).to contain_exactly(*organizations.pluck(:display_name))
