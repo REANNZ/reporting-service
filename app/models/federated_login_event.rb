@@ -3,9 +3,9 @@
 class FederatedLoginEvent < ApplicationRecord
   valhammer
 
-  belongs_to :identity_provider, foreign_key: :asserting_party, primary_key: :entity_id
+  belongs_to :identity_provider, foreign_key: :asserting_party, primary_key: :entity_id, optional: true
 
-  belongs_to :service_provider, foreign_key: :relying_party, primary_key: :entity_id
+  belongs_to :service_provider, foreign_key: :relying_party, primary_key: :entity_id, optional: true
 
   scope(
     :within_range,
