@@ -10,12 +10,14 @@ module QueryAPI
 
   def api_org_to_fr_org(o)
     # Make the object look like it was returned by FR export API
+    # As MDTool can return nil memberSince, fudge current time as activation time for compatibility
+    member_since = o[:memberSince] ? DateTime.parse(o[:memberSince]) : Time.now.utc
     {
       id: o[:id],
       domain: o[:organizationInfoData][:en][:OrganizationName],
       display_name: o[:organizationInfoData][:en][:OrganizationDisplayName],
-      created_at: DateTime.parse(o[:memberSince]),
-      updated_at: o[:active] ? DateTime.parse(o[:memberSince]) : DateTime.parse(o[:notMemberAfter]),
+      created_at: member_since,
+      updated_at: o[:active] ? member_since : DateTime.parse(o[:notMemberAfter]),
       functioning: o[:active]
     }
   end
