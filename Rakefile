@@ -70,6 +70,6 @@ task force_kill: :environment do
   Kernel.exit!(0)
 end
 
-task default: %i[lint_warn rspec]
+task default: %i[lint_warn spec]
 task lint: %i[stree:write lint_md_fix rubocop:autocorrect_all brakeman lint_js_fix force_kill]
 task lint_warn: %i[brakeman stree:check rubocop lint_md lint_js]
