@@ -13,7 +13,7 @@
     "prettier": "3.8.1"
   },
   "resolutions": {
-    "js-yaml": "^4.1.1"
+    "js-yaml": "^4.3.0"
   },
   "scripts": {
     "lint": "eslint . --quiet"
