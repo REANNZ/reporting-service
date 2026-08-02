@@ -6,6 +6,7 @@ gem 'aaf-lipstick', '>= 4.5.1', git: 'git@github.com:REANNZ/aaf-lipstick.git'
 gem 'accession'
 gem 'activerecord-session_store'
 gem 'aws-sdk-sqs', '~> 1'
+gem 'connection_pool', '< 3' # 3.x breaks with Rails 7.2.x
 gem 'implicit-schema'
 gem 'jbuilder'
 gem 'json-jwt'
